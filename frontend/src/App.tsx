@@ -6,6 +6,7 @@ import { HistoricalTrends } from './components/HistoricalTrends';
 import { GeospatialMap } from './components/GeospatialMap';
 import { DataCenter } from './components/DataCenter';
 import { DayDetailModal } from './components/DayDetailModal';
+import { ForecastPanel } from './components/ForecastPanel';
 import { fetchCalendar, fetchDayDetail } from './api';
 import { CalendarResponse, DayDetail } from './types';
 import { Flame, ExternalLink, ShieldCheck } from 'lucide-react';
@@ -25,7 +26,7 @@ export function App() {
   // Load calendar on mount or when mode changes
   useEffect(() => {
     setCalendarLoading(true);
-    fetchCalendar('india', '2020-01-01', '2026-11-13', mode)
+    fetchCalendar('asia', '2020-01-01', '2026-11-13', mode)
       .then((res) => {
         setCalendarData(res);
         setCalendarLoading(false);
@@ -62,7 +63,7 @@ export function App() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        totalDetections={calendarData?.summary.total_detections || 4290395}
+        totalDetections={calendarData?.summary.total_detections || 20935359}
       />
 
       {/* Main Container */}
@@ -86,6 +87,8 @@ export function App() {
         {activeTab === 'map' && <GeospatialMap />}
 
         {activeTab === 'data-center' && <DataCenter />}
+
+        {activeTab === 'forecast' && <ForecastPanel />}
       </main>
 
       {/* Day Detail Modal */}

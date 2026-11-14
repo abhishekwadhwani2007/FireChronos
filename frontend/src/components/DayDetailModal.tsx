@@ -21,10 +21,18 @@ export const DayDetailModal: React.FC<DayDetailModalProps> = ({ dayDetail, loadi
       mapInstanceRef.current = null;
     }
 
+    if ((mapContainerRef.current as any)._leaflet_id) {
+      delete (mapContainerRef.current as any)._leaflet_id;
+    }
+
     const map = L.map(mapContainerRef.current, {
       zoomControl: true,
       attributionControl: false,
     }).setView([22.5, 80.0], 5);
+
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       maxZoom: 18,
@@ -135,7 +143,7 @@ export const DayDetailModal: React.FC<DayDetailModalProps> = ({ dayDetail, loadi
                   {dayDetail.harmonization.hai} <span className="text-xs font-normal text-slate-400">/ 100</span>
                 </p>
                 <div className="mt-2 text-xs text-slate-400">
-                  Monthly Baseline Mean: <strong className="text-white font-mono">{dayDetail.harmonization.monthly_baseline.mean_count}</strong> fires/day
+                  Monthly Baseline Mean: <strong className="text-white font-mono">{dayDetail.harmonization.monthly_baseline?.mean_count ?? 'N/A'}</strong> fires/day
                 </div>
               </div>
 

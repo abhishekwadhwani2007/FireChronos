@@ -1,41 +1,24 @@
 {
   "project": "FIRECHRONOS",
-  "event": "NASA Space Apps Challenge 2026",
-  "region": "India",
-  "region_id": "india",
-  "bbox": [
-    68.1,
-    6.7,
-    97.4,
-    35.5
+  "challenge": "NASA Space Apps 2026 - Harmonization of MODIS and VIIRS Hot Spots",
+  "region_name": "Pan-Asian Transboundary Fire Belt (India, Pakistan, Afghan, E. Iran, China, Malaysia, etc.)",
+  "bounding_box": [
+    52.1,
+    4.7,
+    109.9,
+    40.9
   ],
-  "total_detections": 4290395,
-  "date_range": {
-    "start": "2020-01-01",
-    "end": "2026-11-13"
+  "total_authentic_observations": 20935359,
+  "sensor_breakdown": {
+    "MODIS_C61_Terra_Aqua": 2037241,
+    "VIIRS_NOAA20_JPSS1": 12526224,
+    "VIIRS_NOAA21_JPSS2": 6371894
   },
-  "sensors": [
-    {
-      "id": "VIIRS_N20",
-      "name": "VIIRS NOAA-20 (J1)",
-      "instrument": "VIIRS",
-      "satellite": "NOAA-20",
-      "resolution": "375 m",
-      "source": "NASA FIRMS VJ114IMGTDL Archive & NRT",
-      "status": "Authentic NASA Observations (Ingested)"
-    },
-    {
-      "id": "MODIS_C61",
-      "name": "MODIS Collection 6.1 (Terra/Aqua)",
-      "instrument": "MODIS",
-      "satellite": "Terra & Aqua",
-      "resolution": "1 km",
-      "source": "NASA FIRMS MOD14 / MYD14",
-      "status": "Calibrated Spatial Harmonization (Schroeder et al. 2014)"
-    }
-  ],
-  "spatial_framework": "0.1 deg x 0.1 deg (~11 km) WGS84 Reference Grid",
-  "temporal_framework": "UTC Calendar Day",
-  "harmonization_index": "Harmonized Activity Index (HAI 0-100)",
-  "generated_at": "2026-11-14T11:53:28.483000"
+  "temporal_range": {
+    "start_date": "2020-01-01",
+    "end_date": "2026-11-13",
+    "calendar_days": 2509
+  },
+  "resolution_scaling_factor": 6.91,
+  "updated_at": "2026-11-14T14:36:35.412043"
 }

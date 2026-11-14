@@ -29,3 +29,9 @@ desktop.ini
 *.log
 .vscode/
 .idea/
+
+# Large generated/raw data — do not commit
+models/artifacts/*.joblib
+data/raw/
+data/processed/*.db
+data/processed/ml_features.csv

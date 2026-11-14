@@ -1,4 +1,4 @@
-﻿"""
+"""
 FIRECHRONOS - FastAPI Backend
 NASA Space Apps Challenge 2026
 
@@ -41,12 +41,19 @@ app.add_middleware(
 )
 
 REGIONS = {
+    "asia": {
+        "id": "asia",
+        "name": "Pan-Asian Transboundary Fire Belt",
+        "bbox": [52.1, 4.7, 109.9, 40.9],
+        "demo": True,
+        "description": "Pan-Asia (India, Pakistan, Afghan, E. Iran, China, Malaysia) - Multi-Sensor (MODIS + VIIRS N20/N21)",
+    },
     "india": {
         "id": "india",
-        "name": "India",
+        "name": "India & South Asia",
         "bbox": [68.1, 6.7, 97.4, 35.5],
         "demo": True,
-        "description": "India - Full 7-year VIIRS NOAA-20 archive (2020-2026)",
+        "description": "India & South Asia - Multi-Sensor (MODIS + VIIRS N20/N21)",
     },
     "california": {
         "id": "california",
@@ -147,7 +154,7 @@ def get_calendar(
 ):
     if region_id not in REGIONS:
         raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
-    if region_id != "india":
+    if region_id not in ("india", "asia"):
         return {"days": [], "meta": {"message": "Data pending for this region"}}
 
     days = data_store.get_calendar_range(start, end)
@@ -165,16 +172,20 @@ def get_calendar(
             "anomaly_class": d["anomaly_class"],
             "anomaly_score": d["anomaly_score"],
         }
+        modis_info = d.get("modis") if isinstance(d.get("modis"), dict) else {}
+        modis_cal = d.get("modis_calibrated_count", round(modis_info.get("count", 0) * 3.8))
+        modis_frp = d.get("modis_calibrated_frp", round(modis_info.get("frp_sum", 0.0) * 1.14, 1))
+
         if mode == "harmonized":
-            entry["count"] = d["viirs_count"]
-            entry["modis_count"] = d["modis_calibrated_count"]
-            entry["frp_sum"] = d["viirs_frp_sum"]
+            entry["count"] = d.get("viirs_count", d.get("count", 0))
+            entry["modis_count"] = modis_cal
+            entry["frp_sum"] = d.get("viirs_frp_sum", d.get("frp_sum", 0))
         elif mode == "viirs":
-            entry["count"] = d["viirs_count"]
-            entry["frp_sum"] = d["viirs_frp_sum"]
+            entry["count"] = d.get("viirs_count", d.get("count", 0))
+            entry["frp_sum"] = d.get("viirs_frp_sum", d.get("frp_sum", 0))
         else:  # modis
-            entry["count"] = d["modis_calibrated_count"]
-            entry["frp_sum"] = d["modis_calibrated_frp"]
+            entry["count"] = modis_cal
+            entry["frp_sum"] = modis_frp
 
         calendar_days.append(entry)
 
@@ -206,7 +217,7 @@ def get_calendar(
 def get_day_detail(region_id: str, date: str):
     if region_id not in REGIONS:
         raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
-    if region_id != "india":
+    if region_id not in ("india", "asia"):
         raise HTTPException(status_code=404, detail="Data pending for this region")
 
     day = data_store.get_day(date)
@@ -222,6 +233,10 @@ def get_day_detail(region_id: str, date: str):
     month_key = str(day["month"])
     month_norm = baseline.get(month_key, {})
 
+    modis_info = day.get("modis") if isinstance(day.get("modis"), dict) else {}
+    modis_cal_count = day.get("modis_calibrated_count", round(modis_info.get("count", 0) * 3.8))
+    modis_cal_frp = day.get("modis_calibrated_frp", round(modis_info.get("frp_sum", 0.0) * 1.14, 1))
+
     return {
         "date": day["date"],
         "year": day["year"],
@@ -229,16 +244,16 @@ def get_day_detail(region_id: str, date: str):
         "day_of_month": day["day"],
         "sensors": {
             "viirs_n20": {
-                "detection_count": day["viirs_count"],
-                "frp_sum_mw": day["viirs_frp_sum"],
-                "frp_mean_mw": day["viirs_frp_mean"],
-                "frp_max_mw": day["viirs_frp_max"],
-                "confidence_breakdown": day["confidence"],
-                "daynight_breakdown": day["daynight"],
+                "detection_count": day.get("viirs_count", day.get("count", 0)),
+                "frp_sum_mw": day.get("viirs_frp_sum", day.get("frp_sum", 0)),
+                "frp_mean_mw": day.get("viirs_frp_mean", 0),
+                "frp_max_mw": day.get("viirs_frp_max", 0),
+                "confidence_breakdown": day.get("confidence", {}),
+                "daynight_breakdown": day.get("daynight", {}),
             },
             "modis_calibrated": {
-                "detection_count": day["modis_calibrated_count"],
-                "frp_sum_mw": day["modis_calibrated_frp"],
+                "detection_count": modis_cal_count,
+                "frp_sum_mw": modis_cal_frp,
                 "note": "Calibrated equivalent via Schroeder et al. 2014 ratio (VIIRS/3.8)",
             },
         },
@@ -264,7 +279,7 @@ def get_sensor_comparison(
 ):
     if region_id not in REGIONS:
         raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
-    if region_id != "india":
+    if region_id not in ("india", "asia"):
         return {"series": []}
 
     all_days = data_store.get_all_days()
@@ -273,12 +288,15 @@ def get_sensor_comparison(
 
     series = []
     for d in all_days:
+        modis_info = d.get("modis") if isinstance(d.get("modis"), dict) else {}
+        modis_cal = d.get("modis_calibrated_count", round(modis_info.get("count", 0) * 3.8))
+        modis_frp = d.get("modis_calibrated_frp", round(modis_info.get("frp_sum", 0.0) * 1.14, 1))
         series.append({
             "date": d["date"],
-            "viirs_count": d["viirs_count"],
-            "modis_calibrated_count": d["modis_calibrated_count"],
-            "viirs_frp": d["viirs_frp_sum"],
-            "modis_calibrated_frp": d["modis_calibrated_frp"],
+            "viirs_count": d.get("viirs_count", d.get("count", 0)),
+            "modis_calibrated_count": modis_cal,
+            "viirs_frp": d.get("viirs_frp_sum", d.get("frp_sum", 0)),
+            "modis_calibrated_frp": modis_frp,
             "hai": d["hai"],
             "anomaly_score": d["anomaly_score"],
         })
@@ -323,7 +341,7 @@ def get_anomalies(
 ):
     if region_id not in REGIONS:
         raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
-    if region_id != "india":
+    if region_id not in ("india", "asia"):
         return {"anomalies": []}
 
     all_days = data_store.get_all_days()
@@ -356,7 +374,7 @@ def get_anomalies(
 def get_seasonal_profile(region_id: str):
     if region_id not in REGIONS:
         raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
-    if region_id != "india":
+    if region_id not in ("india", "asia"):
         return {"profile": []}
 
     all_days = data_store.get_all_days()
@@ -417,7 +435,7 @@ def get_seasonal_profile(region_id: str):
 def get_grid(region_id: str, limit: int = Query(default=500, le=1500)):
     if region_id not in REGIONS:
         raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
-    if region_id != "india":
+    if region_id not in ("india", "asia"):
         return {"cells": []}
 
     grid = data_store.get_grid()
@@ -427,3 +445,31 @@ def get_grid(region_id: str, limit: int = Query(default=500, le=1500)):
         "total_cells": len(grid),
         "cells": grid[:limit],
     }
+
+
+# ---------------------------------------------------------------------------
+# Predictive AI Forecasting (Phase 4)
+# ---------------------------------------------------------------------------
+@app.get("/api/regions/{region_id}/forecast", tags=["Predictive AI"])
+def get_forecast(region_id: str):
+    if region_id not in REGIONS:
+        raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
+    if region_id not in ("india", "asia"):
+        return {"forecasts": [], "region_id": region_id}
+
+    fc = data_store.get_forecast()
+    if not fc:
+        raise HTTPException(status_code=503, detail="Forecast model output not initialized")
+    return fc
+
+
+@app.get("/api/regions/{region_id}/model-accuracy", tags=["Predictive AI"])
+def get_model_accuracy(region_id: str):
+    if region_id not in REGIONS:
+        raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
+
+    ev = data_store.get_evaluation()
+    if not ev:
+        raise HTTPException(status_code=503, detail="Model evaluation metrics not initialized")
+    return ev
+

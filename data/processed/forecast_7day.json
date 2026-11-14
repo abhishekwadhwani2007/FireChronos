@@ -1,0 +1,110 @@
+{
+  "generated_at": "2026-11-14T14:40:54.449920",
+  "anchor_date": "2026-11-06",
+  "region_id": "asia",
+  "forecast_horizon_days": 7,
+  "model_metadata": {
+    "architecture": "Dual-Head Multi-Sensor Ensemble (XGBoost + HistGradientBoosting)",
+    "regression_mae": 1.5,
+    "regression_r2": 0.953,
+    "classifier_roc_auc": 0.868,
+    "classifier_high_precision": 1.0,
+    "classifier_accuracy": 0.903,
+    "validation_strategy": "Out-of-sample holdout (494 days)",
+    "sensor_foundation": "NASA FIRMS Authentic Multi-Sensor (MODIS C6.1 + VIIRS NOAA-20 + VIIRS NOAA-21)"
+  },
+  "forecasts": [
+    {
+      "date": "2026-11-07",
+      "day_offset": 1,
+      "day_of_week": "Saturday",
+      "predicted_hai": 7.4,
+      "confidence_interval_low": 4.9,
+      "confidence_interval_high": 9.8,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 12.3
+    },
+    {
+      "date": "2026-11-08",
+      "day_offset": 2,
+      "day_of_week": "Sunday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 4.7,
+      "confidence_interval_high": 10.4,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 12.1
+    },
+    {
+      "date": "2026-11-09",
+      "day_offset": 3,
+      "day_of_week": "Monday",
+      "predicted_hai": 7.3,
+      "confidence_interval_low": 4.1,
+      "confidence_interval_high": 10.5,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 11.9
+    },
+    {
+      "date": "2026-11-10",
+      "day_offset": 4,
+      "day_of_week": "Tuesday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 4.0,
+      "confidence_interval_high": 11.2,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 11.7
+    },
+    {
+      "date": "2026-11-11",
+      "day_offset": 5,
+      "day_of_week": "Wednesday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 3.6,
+      "confidence_interval_high": 11.5,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 11.4
+    },
+    {
+      "date": "2026-11-12",
+      "day_offset": 6,
+      "day_of_week": "Thursday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 3.3,
+      "confidence_interval_high": 11.9,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 11.1
+    },
+    {
+      "date": "2026-11-13",
+      "day_offset": 7,
+      "day_of_week": "Friday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 2.9,
+      "confidence_interval_high": 12.3,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 10.6
+    }
+  ],
+  "disclaimer": "FIRECHRONOS predictive forecasts are synthesized from harmonized satellite fire histories and seasonal climatology across Asia. This system provides statistical situational awareness and early warning for wildfire, peatland, and crop residue burning dynamics."
+}

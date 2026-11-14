@@ -6,20 +6,23 @@ requests are served in microseconds with no CSV parsing overhead.
 
 import json
 import sqlite3
-import os
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parent.parent / "data" / "processed"
+BASE    = Path(__file__).resolve().parent.parent / "data" / "processed"
+MODELS  = Path(__file__).resolve().parent.parent / "models"
 
 _calendar: list[dict] = []
 _calendar_by_date: dict[str, dict] = {}
 _monthly_baseline: dict[str, dict] = {}
 _grid: list[dict] = []
 _metadata: dict = {}
+_forecast: dict = {}
+_evaluation: dict = {}
 
 
 def load_all():
     global _calendar, _calendar_by_date, _monthly_baseline, _grid, _metadata
+    global _forecast, _evaluation
 
     with open(BASE / "india_daily_calendar.json", encoding="utf-8") as f:
         _calendar = json.load(f)
@@ -33,6 +36,25 @@ def load_all():
 
     with open(BASE / "metadata.json", encoding="utf-8") as f:
         _metadata = json.load(f)
+
+    # Phase 4: forecast & evaluation (optional -- may not exist on first boot)
+    fc_path = BASE / "forecast_7day.json"
+    if fc_path.exists():
+        with open(fc_path, encoding="utf-8") as f:
+            _forecast = json.load(f)
+        print(f"[DataStore] Loaded forecast: {len(_forecast.get('forecasts', []))} days")
+    else:
+        _forecast = {}
+        print("[DataStore] No forecast file found -- run scripts/forecast.py to generate")
+
+    ev_path = MODELS / "evaluation_report.json"
+    if ev_path.exists():
+        with open(ev_path, encoding="utf-8") as f:
+            _evaluation = json.load(f)
+        print(f"[DataStore] Loaded evaluation report")
+    else:
+        _evaluation = {}
+        print("[DataStore] No evaluation report found -- run scripts/train_model.py to generate")
 
     print(f"[DataStore] Loaded {len(_calendar)} calendar days, {len(_grid)} grid cells")
 
@@ -59,6 +81,14 @@ def get_baseline() -> dict:
 
 def get_metadata() -> dict:
     return _metadata
+
+
+def get_forecast() -> dict:
+    return _forecast
+
+
+def get_evaluation() -> dict:
+    return _evaluation
 
 
 def get_hotspots_from_db(date: str) -> list[dict]:
