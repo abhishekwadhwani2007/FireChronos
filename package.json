@@ -4,7 +4,7 @@
   "private": true,
   "description": "FIRECHRONOS — Harmonized MODIS & VIIRS Hot Spots | NASA Space Apps 2026",
   "scripts": {
-    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "build": "cd frontend && npm install && npm run build",
     "dev": "npm --prefix frontend run dev"
   }
 }
