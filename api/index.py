@@ -28,18 +28,16 @@ from contextlib import asynccontextmanager
 import data_store
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    data_store.load_all()
-    yield
-
-
 app = FastAPI(
     title="FIRECHRONOS API",
     description="Harmonized MODIS & VIIRS active-fire data for India (NASA Space Apps 2026)",
     version="1.0.0",
-    lifespan=lifespan,
 )
+
+try:
+    data_store.load_all()
+except Exception as _e:
+    print(f"[FIRECHRONOS] Initial data load warning: {_e}")
 
 app.add_middleware(
     CORSMiddleware,

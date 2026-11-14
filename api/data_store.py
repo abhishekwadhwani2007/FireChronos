@@ -109,8 +109,11 @@ def load_all():
 
     _loaded = True
 
-# Load immediately on module load so serverless functions never have empty state
-load_all()
+# Safe eager load at import time
+try:
+    load_all()
+except Exception as e:
+    print(f"[DataStore] Safe eager load notice: {e}")
 
 
 def get_calendar_range(start: str, end: str) -> list[dict]:

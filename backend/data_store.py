@@ -1,22 +1,28 @@
-﻿"""
-FIRECHRONOS - In-memory data store.
-Loads the pre-computed JSON files once at startup so all API
-requests are served in microseconds with no CSV parsing overhead.
+"""
+FIRECHRONOS - In-memory data store for Vercel Serverless & Local.
+Loads pre-computed JSON files once at startup.
 """
 
 import json
 import sqlite3
+import os
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parent.parent / "data" / "processed"
-if not BASE.exists():
-    alt = Path.cwd() / "data" / "processed"
-    if alt.exists():
-        BASE = alt
-    else:
-        alt2 = Path(__file__).resolve().parent / "data" / "processed"
-        if alt2.exists():
-            BASE = alt2
+# Search multiple candidate directories for data/processed
+CANDIDATE_BASES = [
+    Path(__file__).resolve().parent / "data" / "processed",
+    Path(__file__).resolve().parent.parent / "data" / "processed",
+    Path.cwd() / "data" / "processed",
+    Path.cwd() / "api" / "data" / "processed",
+    Path("/var/task/api/data/processed"),
+    Path("/var/task/data/processed"),
+]
+
+BASE = CANDIDATE_BASES[0]
+for p in CANDIDATE_BASES:
+    if p.exists() and (p / "india_daily_calendar.json").exists():
+        BASE = p
+        break
 
 MODELS = Path(__file__).resolve().parent.parent / "models"
 if not MODELS.exists():
@@ -33,96 +39,150 @@ _forecast: dict = {}
 _evaluation: dict = {}
 
 
+_loaded = False
+
 def load_all():
     global _calendar, _calendar_by_date, _monthly_baseline, _grid, _metadata
-    global _forecast, _evaluation
+    global _forecast, _evaluation, _loaded
 
-    with open(BASE / "india_daily_calendar.json", encoding="utf-8") as f:
-        _calendar = json.load(f)
-    _calendar_by_date = {d["date"]: d for d in _calendar}
+    if _loaded and _calendar:
+        return
 
-    with open(BASE / "india_monthly_baseline.json", encoding="utf-8") as f:
-        _monthly_baseline = json.load(f)
-
-    with open(BASE / "india_grid_top_hotspots.json", encoding="utf-8") as f:
-        _grid = json.load(f)
-
-    with open(BASE / "metadata.json", encoding="utf-8") as f:
-        _metadata = json.load(f)
-
-    # Phase 4: forecast & evaluation (optional -- may not exist on first boot)
-    fc_path = BASE / "forecast_7day.json"
-    if fc_path.exists():
-        with open(fc_path, encoding="utf-8") as f:
-            _forecast = json.load(f)
-        print(f"[DataStore] Loaded forecast: {len(_forecast.get('forecasts', []))} days")
+    # 1. Calendar
+    cal_file = BASE / "india_daily_calendar.json"
+    if cal_file.exists():
+        try:
+            with open(cal_file, encoding="utf-8") as f:
+                _calendar = json.load(f)
+            _calendar_by_date = {d["date"]: d for d in _calendar if "date" in d}
+            print(f"[DataStore] Loaded {len(_calendar)} calendar days from {cal_file}")
+        except Exception as e:
+            print(f"[DataStore] Calendar read error: {e}")
     else:
-        _forecast = {}
-        print("[DataStore] No forecast file found -- run scripts/forecast.py to generate")
+        print(f"[DataStore] Calendar file not found at {cal_file}")
 
-    ev_path = MODELS / "evaluation_report.json"
-    if ev_path.exists():
-        with open(ev_path, encoding="utf-8") as f:
-            _evaluation = json.load(f)
-        print(f"[DataStore] Loaded evaluation report")
-    else:
-        _evaluation = {}
-        print("[DataStore] No evaluation report found -- run scripts/train_model.py to generate")
+    # 2. Monthly baseline
+    base_file = BASE / "india_monthly_baseline.json"
+    if base_file.exists():
+        try:
+            with open(base_file, encoding="utf-8") as f:
+                _monthly_baseline = json.load(f)
+        except Exception as e:
+            print(f"[DataStore] Baseline read error: {e}")
 
-    print(f"[DataStore] Loaded {len(_calendar)} calendar days, {len(_grid)} grid cells")
+    # 3. Grid hotspots
+    grid_file = BASE / "india_grid_top_hotspots.json"
+    if grid_file.exists():
+        try:
+            with open(grid_file, encoding="utf-8") as f:
+                _grid = json.load(f)
+            print(f"[DataStore] Loaded {len(_grid)} grid cells")
+        except Exception as e:
+            print(f"[DataStore] Grid read error: {e}")
 
+    # 4. Metadata
+    meta_file = BASE / "metadata.json"
+    if meta_file.exists():
+        try:
+            with open(meta_file, encoding="utf-8") as f:
+                _metadata = json.load(f)
+        except Exception as e:
+            print(f"[DataStore] Metadata read error: {e}")
 
-def get_calendar_range(start: str, end: str) -> list[dict]:
-    return [d for d in _calendar if start <= d["date"] <= end]
-
-
-def get_day(date: str) -> dict | None:
-    return _calendar_by_date.get(date)
-
-
-def get_all_days() -> list[dict]:
-    return _calendar
-
-
-def get_grid() -> list[dict]:
-    return _grid
-
-
-def get_baseline() -> dict:
-    return _monthly_baseline
-
-
-def get_metadata() -> dict:
-    return _metadata
-
-
-def get_forecast() -> dict:
-    global _forecast
+    # 5. Forecast
     fc_path = BASE / "forecast_7day.json"
     if fc_path.exists():
         try:
             with open(fc_path, encoding="utf-8") as f:
                 _forecast = json.load(f)
         except Exception as e:
-            print(f"[DataStore] Read forecast error: {e}")
-    return _forecast
+            print(f"[DataStore] Forecast read error: {e}")
 
-
-def get_evaluation() -> dict:
-    global _evaluation
+    # 6. Evaluation
     ev_path = MODELS / "evaluation_report.json"
     if ev_path.exists():
         try:
             with open(ev_path, encoding="utf-8") as f:
                 _evaluation = json.load(f)
         except Exception as e:
-            print(f"[DataStore] Read evaluation error: {e}")
+            print(f"[DataStore] Evaluation read error: {e}")
+
+    _loaded = True
+
+# Safe eager load at import time
+try:
+    load_all()
+except Exception as e:
+    print(f"[DataStore] Safe eager load notice: {e}")
+
+
+def get_calendar_range(start: str, end: str) -> list[dict]:
+    if not _calendar:
+        load_all()
+    return [d for d in _calendar if start <= d.get("date", "") <= end]
+
+
+def get_day(date: str) -> dict | None:
+    if not _calendar_by_date:
+        load_all()
+    return _calendar_by_date.get(date)
+
+
+def get_all_days() -> list[dict]:
+    if not _calendar:
+        load_all()
+    return _calendar
+
+
+def get_grid() -> list[dict]:
+    if not _grid:
+        load_all()
+    return _grid
+
+
+def get_baseline() -> dict:
+    if not _monthly_baseline:
+        load_all()
+    return _monthly_baseline
+
+
+def get_metadata() -> dict:
+    if not _metadata:
+        load_all()
+    return _metadata
+
+
+def get_forecast() -> dict:
+    global _forecast
+    if not _forecast:
+        fc_path = BASE / "forecast_7day.json"
+        if fc_path.exists():
+            try:
+                with open(fc_path, encoding="utf-8") as f:
+                    _forecast = json.load(f)
+            except Exception as e:
+                print(f"[DataStore] Read forecast error: {e}")
+    return _forecast
+
+
+def get_evaluation() -> dict:
+    global _evaluation
+    if not _evaluation:
+        ev_path = MODELS / "evaluation_report.json"
+        if ev_path.exists():
+            try:
+                with open(ev_path, encoding="utf-8") as f:
+                    _evaluation = json.load(f)
+            except Exception as e:
+                print(f"[DataStore] Read evaluation error: {e}")
     return _evaluation
 
 
 def get_hotspots_from_db(date: str) -> list[dict]:
-    """Return high-FRP individual hotspots from SQLite for a specific day."""
+    """Return individual hotspots if sqlite is present, otherwise fallback to empty."""
     db_path = BASE / "fire_events.db"
+    if not db_path.exists():
+        return []
     try:
         conn = sqlite3.connect(str(db_path))
         conn.row_factory = sqlite3.Row
