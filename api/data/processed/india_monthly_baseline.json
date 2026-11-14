@@ -1,0 +1,86 @@
+{
+  "1": {
+    "month": 1,
+    "mean_count": 4645.3,
+    "std_count": 1695.3,
+    "mean_frp": 51648.3,
+    "std_frp": 21071.9
+  },
+  "2": {
+    "month": 2,
+    "mean_count": 8750.3,
+    "std_count": 3178.2,
+    "mean_frp": 103978.6,
+    "std_frp": 41315.7
+  },
+  "3": {
+    "month": 3,
+    "mean_count": 15931.4,
+    "std_count": 6121.0,
+    "mean_frp": 343226.6,
+    "std_frp": 183146.9
+  },
+  "4": {
+    "month": 4,
+    "mean_count": 13519.3,
+    "std_count": 6489.7,
+    "mean_frp": 324247.1,
+    "std_frp": 240428.1
+  },
+  "5": {
+    "month": 5,
+    "mean_count": 4087.0,
+    "std_count": 2269.9,
+    "mean_frp": 58081.6,
+    "std_frp": 48452.3
+  },
+  "6": {
+    "month": 6,
+    "mean_count": 1462.6,
+    "std_count": 482.5,
+    "mean_frp": 16217.3,
+    "std_frp": 8730.8
+  },
+  "7": {
+    "month": 7,
+    "mean_count": 889.5,
+    "std_count": 182.8,
+    "mean_frp": 9886.6,
+    "std_frp": 4156.0
+  },
+  "8": {
+    "month": 8,
+    "mean_count": 890.6,
+    "std_count": 159.3,
+    "mean_frp": 9324.6,
+    "std_frp": 3511.6
+  },
+  "9": {
+    "month": 9,
+    "mean_count": 1010.0,
+    "std_count": 179.0,
+    "mean_frp": 8610.3,
+    "std_frp": 3612.9
+  },
+  "10": {
+    "month": 10,
+    "mean_count": 1855.4,
+    "std_count": 946.8,
+    "mean_frp": 16540.2,
+    "std_frp": 9661.6
+  },
+  "11": {
+    "month": 11,
+    "mean_count": 3415.7,
+    "std_count": 1569.7,
+    "mean_frp": 34678.7,
+    "std_frp": 18724.2
+  },
+  "12": {
+    "month": 12,
+    "mean_count": 2681.6,
+    "std_count": 636.1,
+    "mean_frp": 24662.3,
+    "std_frp": 10479.8
+  }
+}
