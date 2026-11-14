@@ -1,0 +1,41 @@
+{
+  "project": "FIRECHRONOS",
+  "event": "NASA Space Apps Challenge 2026",
+  "region": "India",
+  "region_id": "india",
+  "bbox": [
+    68.1,
+    6.7,
+    97.4,
+    35.5
+  ],
+  "total_detections": 4290395,
+  "date_range": {
+    "start": "2020-01-01",
+    "end": "2026-11-13"
+  },
+  "sensors": [
+    {
+      "id": "VIIRS_N20",
+      "name": "VIIRS NOAA-20 (J1)",
+      "instrument": "VIIRS",
+      "satellite": "NOAA-20",
+      "resolution": "375 m",
+      "source": "NASA FIRMS VJ114IMGTDL Archive & NRT",
+      "status": "Authentic NASA Observations (Ingested)"
+    },
+    {
+      "id": "MODIS_C61",
+      "name": "MODIS Collection 6.1 (Terra/Aqua)",
+      "instrument": "MODIS",
+      "satellite": "Terra & Aqua",
+      "resolution": "1 km",
+      "source": "NASA FIRMS MOD14 / MYD14",
+      "status": "Calibrated Spatial Harmonization (Schroeder et al. 2014)"
+    }
+  ],
+  "spatial_framework": "0.1 deg x 0.1 deg (~11 km) WGS84 Reference Grid",
+  "temporal_framework": "UTC Calendar Day",
+  "harmonization_index": "Harmonized Activity Index (HAI 0-100)",
+  "generated_at": "2026-11-14T11:53:28.483000"
+}

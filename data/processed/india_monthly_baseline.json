@@ -1,0 +1,74 @@
+{
+  "1": {
+    "mean_count": 1001.2,
+    "std_count": 367.9,
+    "mean_frp": 3859.3,
+    "std_frp": 1815.4
+  },
+  "2": {
+    "mean_count": 1871.7,
+    "std_count": 968.2,
+    "mean_frp": 9316.4,
+    "std_frp": 5348.0
+  },
+  "3": {
+    "mean_count": 5246.7,
+    "std_count": 3741.8,
+    "mean_frp": 43423.2,
+    "std_frp": 31982.4
+  },
+  "4": {
+    "mean_count": 4642.7,
+    "std_count": 2198.5,
+    "mean_frp": 30133.7,
+    "std_frp": 16059.2
+  },
+  "5": {
+    "mean_count": 2065.5,
+    "std_count": 1310.3,
+    "mean_frp": 12826.6,
+    "std_frp": 8569.0
+  },
+  "6": {
+    "mean_count": 426.0,
+    "std_count": 407.3,
+    "mean_frp": 2199.8,
+    "std_frp": 2289.4
+  },
+  "7": {
+    "mean_count": 89.1,
+    "std_count": 55.2,
+    "mean_frp": 503.8,
+    "std_frp": 849.8
+  },
+  "8": {
+    "mean_count": 77.3,
+    "std_count": 54.9,
+    "mean_frp": 227.2,
+    "std_frp": 172.8
+  },
+  "9": {
+    "mean_count": 132.5,
+    "std_count": 80.0,
+    "mean_frp": 373.3,
+    "std_frp": 247.2
+  },
+  "10": {
+    "mean_count": 941.9,
+    "std_count": 927.5,
+    "mean_frp": 4529.5,
+    "std_frp": 5853.3
+  },
+  "11": {
+    "mean_count": 2396.3,
+    "std_count": 1522.0,
+    "mean_frp": 12910.6,
+    "std_frp": 11843.2
+  },
+  "12": {
+    "mean_count": 1372.9,
+    "std_count": 569.0,
+    "mean_frp": 5009.9,
+    "std_frp": 2314.7
+  }
+}

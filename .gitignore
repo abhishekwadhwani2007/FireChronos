@@ -1,0 +1,31 @@
+﻿# Raw NASA CSV datasets (>340 MB exceeds GitHub 100 MB limit)
+data/raw/
+*.csv
+
+# SQLite database
+*.db
+*.sqlite3
+
+# Node dependencies and build output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.tmp/
+dist/
+
+# Python cache and environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.vscode/
+.idea/
