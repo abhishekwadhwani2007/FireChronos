@@ -150,6 +150,20 @@ export interface MetaSourcesResponse {
   };
 }
 
+export interface ForecastCorridor {
+  id: string;
+  name: string;
+  countries: string[];
+  centroid: [number, number];
+  risk_tier: 'CRITICAL' | 'ELEVATED' | 'NOMINAL' | 'SUPPRESSED';
+  share_percentage: number;
+  predicted_hotspots: number;
+  predicted_frp_mw: number;
+  primary_driver: string;
+  key_zones: string[];
+  coordinates_sample: [number, number][];
+}
+
 export interface ForecastDay {
   date: string;
   day_offset: number;
@@ -162,6 +176,10 @@ export interface ForecastDay {
   color: string;
   alert_code: string;
   expected_seasonal_baseline: number;
+  total_estimated_hotspots?: number;
+  dominant_corridor?: string;
+  center_of_mass?: [number, number];
+  corridors?: ForecastCorridor[];
 }
 
 export interface ForecastResponse {

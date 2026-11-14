@@ -83,7 +83,7 @@ proba_cls = 0.60 * proba_xgb + 0.40 * proba_hgb
 auc_roc = roc_auc_score(y_test_cls, proba_cls)
 
 threshold_evals = {}
-for t in np.arange(0.30, 0.75, 0.05):
+for t in np.arange(0.20, 0.70, 0.05):
     t_round = round(float(t), 2)
     bin_pred = (proba_cls >= t_round).astype(int)
     p, r, f1, _ = precision_recall_fscore_support(y_test_cls, bin_pred, average="binary", zero_division=0)
@@ -98,17 +98,17 @@ for t in np.arange(0.30, 0.75, 0.05):
         "tp": tp, "fp": fp, "fn": fn, "tn": tn
     }
 
-# High-Precision Operating Mode (T=0.70)
-mode_90 = threshold_evals.get("0.7", threshold_evals.get("0.70"))
-# Balanced Operating Mode (T=0.50)
-mode_bal = threshold_evals.get("0.5", threshold_evals.get("0.50"))
+# Realistic High-Confidence Operating Point (T=0.50)
+mode_high = threshold_evals.get("0.5", threshold_evals.get("0.50"))
+# Balanced Advisory Mode (T=0.35)
+mode_bal = threshold_evals.get("0.35", threshold_evals.get("0.35"))
 
 print(f"  Classifier ROC-AUC: {auc_roc:.4f}")
-print(f"  High-Precision Target Mode (T=0.70):")
-print(f"    - Precision: {mode_90['precision']*100:.1f}% (Verified >= 90%)")
-print(f"    - Accuracy : {mode_90['accuracy']*100:.1f}% (Verified >= 90%)")
-print(f"    - False Positives: {mode_90['fp']} days out of {len(test)} test days")
-print(f"  Balanced Advisory Mode (T=0.50): Precision={mode_bal['precision']*100:.1f}%, Accuracy={mode_bal['accuracy']*100:.1f}%, Recall={mode_bal['recall']*100:.1f}%")
+print(f"  Operational High-Confidence Mode (T=0.50):")
+print(f"    - Precision: {mode_high['precision']*100:.1f}% (Honest, documented false alarm rate)")
+print(f"    - Accuracy : {mode_high['accuracy']*100:.1f}%")
+print(f"    - False Positives: {mode_high['fp']} day(s) out of {len(test)} test days")
+print(f"  Balanced Advisory Mode (T=0.35): Precision={mode_bal['precision']*100:.1f}%, Accuracy={mode_bal['accuracy']*100:.1f}%, Recall={mode_bal['recall']*100:.1f}%")
 
 joblib.dump(xgb_cls, MODELS / "xgb_anomaly_classifier.joblib")
 joblib.dump(hgb_cls, MODELS / "hgb_anomaly_classifier.joblib")
@@ -206,15 +206,15 @@ report = {
         "target": "is_elevated_or_high_next1 (Statistically anomalous burning)",
         "roc_auc": round(float(auc_roc), 4),
         "high_precision_operating_point": {
-            "threshold": 0.70,
-            **mode_90
+            "threshold": 0.50,
+            **mode_high
         },
         "balanced_operating_point": {
-            "threshold": 0.50,
+            "threshold": 0.35,
             **mode_bal
         },
         "threshold_curve": threshold_evals,
-        "verification_statement": "Achieved >=90% Precision (93.8%) and >=90% Overall Accuracy (90.3%) on out-of-sample holdout test."
+        "verification_statement": f"Operational High-Confidence Mode: {mode_high['precision']*100:.1f}% Precision with {mode_high['fp']} documented false positive(s) over 494 out-of-time test days. Overall accuracy {mode_high['accuracy']*100:.1f}%."
     },
     "regressor_head": {
         "model": "Ensemble (XGBoost 55% + HistGradientBoosting 45%)",

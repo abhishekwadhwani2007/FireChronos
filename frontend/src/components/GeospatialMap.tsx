@@ -2,18 +2,30 @@
 import { fetchGrid } from '../api';
 import { GridCell } from '../types';
 import L from 'leaflet';
-import { MapPin, Flame, Navigation, ZoomIn, ZoomOut, Layers, ShieldCheck } from 'lucide-react';
+import {
+  MapPin,
+  Flame,
+  Navigation,
+  ZoomIn,
+  ZoomOut,
+  Layers,
+  Globe
+} from 'lucide-react';
+
+type BaseMapStyle = 'dark' | 'osm' | 'satellite';
 
 export const GeospatialMap: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layerGroupRef = useRef<L.LayerGroup | null>(null);
+  const currentTileLayerRef = useRef<L.TileLayer | null>(null);
 
   const [cells, setCells] = useState<GridCell[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCell, setSelectedCell] = useState<GridCell | null>(null);
   const [minEnergyFilter, setMinEnergyFilter] = useState<number>(0);
   const [activeCorridor, setActiveCorridor] = useState<string>('all');
+  const [baseMap, setBaseMap] = useState<BaseMapStyle>('dark');
 
   // Load 0.1° grid cells across Asia
   useEffect(() => {
@@ -24,9 +36,8 @@ export const GeospatialMap: React.FC = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error('Failed to load spatial grid:', err);
-        // Fallback to india route if needed
-        fetchGrid('india', 2000)
+        console.error('Failed to load spatial grid from asia, trying fallback:', err);
+        fetchGrid('india', 1500)
           .then((res) => {
             setCells(res.cells || []);
             setLoading(false);
@@ -35,51 +46,77 @@ export const GeospatialMap: React.FC = () => {
       });
   }, []);
 
-  // Initialize Map Once with Strict-Mode Safety
+  // Initialize Map with guaranteed lifecycle and resize robustness
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+    const container = mapContainerRef.current;
+    if (!container) return;
 
-    // Clean up any stale leaflet ID to prevent "Map container is already initialized"
-    if ((mapContainerRef.current as any)._leaflet_id) {
-      delete (mapContainerRef.current as any)._leaflet_id;
+    // Fully reset container DOM to avoid StrictMode dual-mount clashes
+    if (mapInstanceRef.current) {
+      try {
+        mapInstanceRef.current.remove();
+      } catch (e) {
+        console.warn('Leaflet cleanup exception:', e);
+      }
+      mapInstanceRef.current = null;
+    }
+    container.innerHTML = '';
+    (container as any)._leaflet_id = null;
+
+    // Initialize Leaflet map
+    const map = L.map(container, {
+      center: [25.0, 80.0],
+      zoom: 4,
+      minZoom: 3,
+      maxZoom: 16,
+      zoomControl: false,
+      attributionControl: true,
+    });
+
+    // Tile Layer creation based on active style
+    let tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+    let options: L.TileLayerOptions = { subdomains: 'abcd', maxZoom: 18, attribution: '© CartoDB' };
+
+    if (baseMap === 'osm') {
+      tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+      options = { maxZoom: 18, attribution: '© OpenStreetMap contributors' };
+    } else if (baseMap === 'satellite') {
+      tileUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+      options = { maxZoom: 17, attribution: 'Tiles © Esri' };
     }
 
-    if (!mapInstanceRef.current) {
-      const map = L.map(mapContainerRef.current, {
-        center: [25.0, 80.0],
-        zoom: 4,
-        minZoom: 3,
-        maxZoom: 16,
-        zoomControl: false,
-        attributionControl: false,
-      });
+    const tileLayer = L.tileLayer(tileUrl, options).addTo(map);
+    currentTileLayerRef.current = tileLayer;
 
-      // Dark theme CartoDB basemap tiles
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd',
-        maxZoom: 18,
-      }).addTo(map);
+    // LayerGroup for fire markers
+    const lg = L.layerGroup().addTo(map);
+    layerGroupRef.current = lg;
+    mapInstanceRef.current = map;
 
-      // Create LayerGroup for dynamic cell updates
-      const lg = L.layerGroup().addTo(map);
-      layerGroupRef.current = lg;
-      mapInstanceRef.current = map;
+    // Multiple layout passes to guarantee canvas rendering
+    const t1 = setTimeout(() => map.invalidateSize(), 100);
+    const t2 = setTimeout(() => map.invalidateSize(), 300);
+    const t3 = setTimeout(() => map.invalidateSize(), 600);
 
-      // Force recalculation of container dimensions
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 150);
-    }
+    // Dynamic resize observer
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    ro.observe(container);
 
-    // Cleanup on unmount
     return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      ro.disconnect();
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
         layerGroupRef.current = null;
+        currentTileLayerRef.current = null;
       }
     };
-  }, []);
+  }, [baseMap]);
 
   // Filtered cells based on user energy slider
   const filteredCells = useMemo(() => {
@@ -93,14 +130,12 @@ export const GeospatialMap: React.FC = () => {
     const lg = layerGroupRef.current;
     if (!map || !lg) return;
 
-    // Clear old markers
     lg.clearLayers();
-
     if (filteredCells.length === 0) return;
 
     filteredCells.forEach((c) => {
-      // Scale radius by detection count (min 3.5px, max 14px)
-      const radius = Math.min(14, Math.max(3.5, Math.sqrt(c.count) * 0.08));
+      // Scale radius by detection count (min 3.5px, max 13px)
+      const radius = Math.min(13, Math.max(3.5, Math.sqrt(c.count) * 0.08));
 
       // Color coding by FRP cumulative thermal energy
       let color = '#38bdf8'; // Moderate
@@ -133,14 +168,13 @@ export const GeospatialMap: React.FC = () => {
           <div><strong>Coordinates:</strong> ${c.lat.toFixed(2)}°N, ${c.lon.toFixed(2)}°E</div>
           <div><strong>Total Fires:</strong> ${c.count.toLocaleString()} detections</div>
           <div><strong>Radiative Power:</strong> ${Math.round(c.frp_sum).toLocaleString()} MW</div>
-          <div style="font-size: 10px; color: #64748b; margin-top: 4px;">NASA Multi-Sensor Harmonized Record</div>
+          <div style="font-size: 10px; color: #64748b; margin-top: 4px;">NASA Harmonized Multi-Sensor</div>
         </div>
       `);
 
       lg.addLayer(marker);
     });
 
-    // Invalidate size to ensure rendering
     map.invalidateSize();
   }, [filteredCells]);
 
@@ -179,101 +213,150 @@ export const GeospatialMap: React.FC = () => {
               Active Fire Hotspot Spatial Grid
             </h1>
             <p className="mt-1 text-sm text-slate-300 max-w-3xl">
-              Mapping cumulative thermal detections and integrated Fire Radiative Power (FRP) across India, Pakistan,
-              China, Malaysia, and surrounding transboundary corridors. Click any cell to inspect local fire density.
+              Harmonized fire observation centroids across India, China, Pakistan, Eastern Iran, and Malaysia.
+              Each grid cell aggregates fire radiative power (MW) and cumulative detections from MODIS C6.1 and VIIRS NOAA-20/21.
             </p>
           </div>
 
-          {/* Preset Corridor Selector */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-slate-950/80 p-2 rounded-xl border border-slate-800">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-2 flex items-center gap-1">
-              <Navigation className="h-3.5 w-3.5 text-orange-400" />
-              Focus Corridor:
+          {/* Controls: Basemap Selector */}
+          <div className="flex items-center gap-2 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800 font-mono text-xs">
+            <Globe className="h-4 w-4 text-slate-400 ml-2" />
+            <span className="text-slate-400 mr-1 text-[11px]">Basemap:</span>
+            <button
+              onClick={() => setBaseMap('dark')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                baseMap === 'dark' ? 'bg-orange-500 text-slate-950 font-bold' : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              Dark Matter
+            </button>
+            <button
+              onClick={() => setBaseMap('osm')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                baseMap === 'osm' ? 'bg-orange-500 text-slate-950 font-bold' : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              OpenStreetMap
+            </button>
+            <button
+              onClick={() => setBaseMap('satellite')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                baseMap === 'satellite' ? 'bg-orange-500 text-slate-950 font-bold' : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              Satellite
+            </button>
+          </div>
+        </div>
+
+        {/* Filter & Presets Row */}
+        <div className="mt-6 flex flex-col md:flex-row md:items-center justify-between gap-4 pt-6 border-t border-slate-800/80">
+          {/* Energy Slider */}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <span className="text-xs text-slate-400 font-mono shrink-0">
+              Min Radiative Energy:
             </span>
-            <div className="flex flex-wrap gap-1">
-              <button
-                onClick={() => panToCorridor('all', 25.0, 80.0, 4)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
-                  activeCorridor === 'all'
-                    ? 'bg-orange-500 text-slate-950 font-bold shadow'
-                    : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                All Asia
-              </button>
-              <button
-                onClick={() => panToCorridor('punjab', 30.5, 75.8, 7)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
-                  activeCorridor === 'punjab'
-                    ? 'bg-orange-500 text-slate-950 font-bold shadow'
-                    : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                Indo-Gangetic
-              </button>
-              <button
-                onClick={() => panToCorridor('central', 22.8, 81.5, 6)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
-                  activeCorridor === 'central'
-                    ? 'bg-orange-500 text-slate-950 font-bold shadow'
-                    : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                Central Forest
-              </button>
-              <button
-                onClick={() => panToCorridor('china', 31.5, 110.0, 5)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
-                  activeCorridor === 'china'
-                    ? 'bg-orange-500 text-slate-950 font-bold shadow'
-                    : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                China Basin
-              </button>
-              <button
-                onClick={() => panToCorridor('malaysia', 3.5, 102.5, 6)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
-                  activeCorridor === 'malaysia'
-                    ? 'bg-orange-500 text-slate-950 font-bold shadow'
-                    : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                Malaysia
-              </button>
-              <button
-                onClick={() => panToCorridor('iran', 28.5, 56.5, 6)}
-                className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
-                  activeCorridor === 'iran'
-                    ? 'bg-orange-500 text-slate-950 font-bold shadow'
-                    : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
-                }`}
-              >
-                E. Iran / Gulf
-              </button>
-            </div>
+            <input
+              type="range"
+              min="0"
+              max="25000"
+              step="1000"
+              value={minEnergyFilter}
+              onChange={(e) => setMinEnergyFilter(Number(e.target.value))}
+              className="w-40 sm:w-56 accent-orange-500"
+            />
+            <span className="text-xs font-mono font-bold text-orange-400 min-w-[70px]">
+              {minEnergyFilter === 0 ? 'All Cells' : `≥ ${minEnergyFilter.toLocaleString()} MW`}
+            </span>
+          </div>
+
+          {/* Regional Corridor Presets */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-xs text-slate-400 font-mono flex items-center gap-1 mr-1">
+              <Navigation className="h-3.5 w-3.5 text-orange-400" />
+              Focus:
+            </span>
+            <button
+              onClick={() => panToCorridor('all', 25.0, 80.0, 4)}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                activeCorridor === 'all'
+                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              All Asia
+            </button>
+            <button
+              onClick={() => panToCorridor('punjab', 30.5, 75.8, 7)}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                activeCorridor === 'punjab'
+                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              Indo-Gangetic
+            </button>
+            <button
+              onClick={() => panToCorridor('central', 22.8, 81.5, 6)}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                activeCorridor === 'central'
+                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              Central Forest
+            </button>
+            <button
+              onClick={() => panToCorridor('china', 28.5, 112.5, 5)}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                activeCorridor === 'china'
+                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              China Basin
+            </button>
+            <button
+              onClick={() => panToCorridor('malaysia', 3.5, 102.5, 6)}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                activeCorridor === 'malaysia'
+                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              Malaysia
+            </button>
+            <button
+              onClick={() => panToCorridor('iran', 28.5, 56.5, 6)}
+              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                activeCorridor === 'iran'
+                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              E. Iran / Gulf
+            </button>
           </div>
         </div>
 
         {/* Telemetry Strip */}
         <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3 pt-5 border-t border-slate-800/80 text-xs font-mono">
           <div className="rounded-xl bg-slate-950/60 p-3 border border-slate-800">
-            <span className="text-[11px] text-slate-400 uppercase">Active Grid Cells</span>
-            <p className="text-lg font-bold text-white mt-0.5">{cells.length.toLocaleString()}</p>
-          </div>
-          <div className="rounded-xl bg-slate-950/60 p-3 border border-slate-800">
-            <span className="text-[11px] text-slate-400 uppercase">Visible on Map</span>
+            <span className="text-[11px] text-slate-400 uppercase">Visible Active Cells</span>
             <p className="text-lg font-bold text-orange-400 mt-0.5">{filteredCells.length.toLocaleString()}</p>
           </div>
           <div className="rounded-xl bg-slate-950/60 p-3 border border-slate-800">
-            <span className="text-[11px] text-slate-400 uppercase">Spatial Resolution</span>
+            <span className="text-[11px] text-slate-400 uppercase">AOI Longitude Range</span>
+            <p className="text-lg font-bold text-white mt-0.5">52.1°E — 109.9°E</p>
+          </div>
+          <div className="rounded-xl bg-slate-950/60 p-3 border border-slate-800">
+            <span className="text-[11px] text-slate-400 uppercase">Spatial Discretization</span>
             <p className="text-lg font-bold text-cyan-400 mt-0.5">0.1° (~11 km)</p>
           </div>
           <div className="rounded-xl bg-slate-950/60 p-3 border border-slate-800">
-            <span className="text-[11px] text-slate-400 uppercase">Sensors Integrated</span>
-            <p className="text-lg font-bold text-emerald-400 mt-0.5 flex items-center gap-1">
-              <ShieldCheck className="h-4 w-4" />
-              Tri-Sensor (M+J1+J2)
+            <span className="text-[11px] text-slate-400 uppercase">Constellations Combined</span>
+            <p className="text-lg font-bold text-emerald-400 mt-0.5">
+              MODIS + VIIRS N20/N21
             </p>
           </div>
         </div>
@@ -284,15 +367,21 @@ export const GeospatialMap: React.FC = () => {
         {loading && (
           <div className="absolute inset-0 z-[500] flex flex-col items-center justify-center bg-slate-950/80 backdrop-blur-sm">
             <Flame className="h-10 w-10 text-orange-500 animate-bounce mb-3" />
-            <p className="text-sm font-mono text-slate-300">Rendering 2,500 Pan-Asian Spatial Grid Cells...</p>
+            <p className="text-sm font-mono text-slate-300">Loading Pan-Asian Spatial Grid Cells...</p>
           </div>
         )}
 
-        {/* Map Container */}
+        {/* Map Container with guaranteed styling */}
         <div
           ref={mapContainerRef}
-          className="h-[650px] w-full z-0 cursor-crosshair"
-          style={{ background: '#070b14' }}
+          style={{
+            height: '650px',
+            minHeight: '650px',
+            width: '100%',
+            position: 'relative',
+            backgroundColor: '#070b14',
+          }}
+          className="cursor-crosshair"
         />
 
         {/* Floating Custom Zoom Controls */}
@@ -348,51 +437,34 @@ export const GeospatialMap: React.FC = () => {
                 </span>
               </div>
               <div className="flex justify-between pt-1 text-[11px]">
-                <span className="text-slate-500">Spatial Framework:</span>
-                <span className="text-slate-400">WGS-84 (~11 km²)</span>
+                <span className="text-slate-400">Spatial Extent:</span>
+                <span className="text-slate-300">~11 km × 11 km</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* Thermal Energy Legend */}
-        <div className="absolute bottom-4 left-4 z-[400] rounded-xl border border-slate-800 bg-slate-950/90 px-4 py-3 shadow-xl backdrop-blur-md text-xs">
-          <div className="flex items-center gap-2 mb-2 font-semibold text-slate-200">
+        {/* Legend */}
+        <div className="absolute bottom-4 right-4 z-[400] flex flex-col gap-1.5 rounded-xl border border-slate-800 bg-slate-950/90 p-3 shadow-xl backdrop-blur-md text-[11px] font-mono">
+          <span className="font-bold text-slate-300 text-xs flex items-center gap-1.5 mb-1">
             <Layers className="h-3.5 w-3.5 text-orange-400" />
-            <span>Cumulative Radiative Energy (MW):</span>
+            Radiative Energy (MW)
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-[#ef4444]" />
+            <span className="text-slate-300">&gt; 50,000 MW (Extreme Cluster)</span>
           </div>
-          <div className="flex flex-wrap items-center gap-4 text-slate-300 font-mono text-[11px]">
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-full bg-sky-400" /> &lt;5k MW
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-full bg-yellow-400" /> 5k–15k MW
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-full bg-orange-500" /> 15k–50k MW
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-full bg-rose-500 ring-2 ring-rose-500/40" /> &gt;50k MW (Intense Cluster)
-            </span>
+          <div className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-[#f97316]" />
+            <span className="text-slate-300">15,000 – 50,000 MW (High)</span>
           </div>
-        </div>
-
-        {/* Filter Slider Pill in Bottom Right */}
-        <div className="absolute bottom-4 right-4 z-[400] rounded-xl border border-slate-800 bg-slate-950/90 px-4 py-2.5 shadow-xl backdrop-blur-md text-xs">
-          <div className="flex items-center gap-3">
-            <span className="text-slate-400 font-mono text-[11px]">Filter Min FRP:</span>
-            <input
-              type="range"
-              min="0"
-              max="25000"
-              step="1000"
-              value={minEnergyFilter}
-              onChange={(e) => setMinEnergyFilter(Number(e.target.value))}
-              className="accent-orange-500 h-1.5 w-24 bg-slate-800 rounded-lg cursor-pointer"
-            />
-            <span className="font-mono text-orange-400 font-bold min-w-[50px] text-right">
-              {minEnergyFilter === 0 ? 'All' : `>${(minEnergyFilter / 1000).toFixed(0)}k MW`}
-            </span>
+          <div className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-[#eab308]" />
+            <span className="text-slate-300">5,000 – 15,000 MW (Elevated)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-[#38bdf8]" />
+            <span className="text-slate-300">&lt; 5,000 MW (Moderate)</span>
           </div>
         </div>
       </div>

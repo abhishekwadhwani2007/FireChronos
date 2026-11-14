@@ -84,10 +84,26 @@ def get_metadata() -> dict:
 
 
 def get_forecast() -> dict:
+    global _forecast
+    fc_path = BASE / "forecast_7day.json"
+    if fc_path.exists():
+        try:
+            with open(fc_path, encoding="utf-8") as f:
+                _forecast = json.load(f)
+        except Exception as e:
+            print(f"[DataStore] Read forecast error: {e}")
     return _forecast
 
 
 def get_evaluation() -> dict:
+    global _evaluation
+    ev_path = MODELS / "evaluation_report.json"
+    if ev_path.exists():
+        try:
+            with open(ev_path, encoding="utf-8") as f:
+                _evaluation = json.load(f)
+        except Exception as e:
+            print(f"[DataStore] Read evaluation error: {e}")
     return _evaluation
 
 

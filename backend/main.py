@@ -432,7 +432,7 @@ def get_seasonal_profile(region_id: str):
 # Spatial Grid
 # ---------------------------------------------------------------------------
 @app.get("/api/regions/{region_id}/grid", tags=["Spatial"])
-def get_grid(region_id: str, limit: int = Query(default=500, le=1500)):
+def get_grid(region_id: str, limit: int = Query(default=2000, le=5000)):
     if region_id not in REGIONS:
         raise HTTPException(status_code=404, detail=f"Region '{region_id}' not found")
     if region_id not in ("india", "asia"):

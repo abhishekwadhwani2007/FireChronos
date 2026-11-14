@@ -5,9 +5,8 @@
 
 [![NASA Space Apps 2026](https://img.shields.io/badge/NASA%20Space%20Apps-2026-orange.svg)](https://www.spaceappschallenge.org/)
 [![Authentic NASA FIRMS](https://img.shields.io/badge/NASA%20FIRMS-20.9M%20Records-blue.svg)](https://firms.modaps.eosdis.nasa.gov/)
-[![Model Accuracy](https://img.shields.io/badge/AI%20Accuracy-90.3%25-brightgreen.svg)]()
-[![Model Precision](https://img.shields.io/badge/AI%20Precision-100%25-emerald.svg)]()
 [![Model R2](https://img.shields.io/badge/R%C2%B2%20Fit-95.3%25-cyan.svg)]()
+[![ROC-AUC](https://img.shields.io/badge/ROC--AUC-0.868-emerald.svg)]()
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg)](https://www.typescriptlang.org/)
@@ -40,10 +39,10 @@ Across complex Asian ecologies—spanning India, Pakistan, Afghanistan, Eastern 
             ▼                                                     ▼
 ┌───────────────────────────────────────┐   ┌─────────────────────────────────┐
 │     INTERACTIVE SCIENTIFIC UI         │   │   DUAL-HEAD PREDICTIVE AI       │
-│  - Harmonized Activity Calendar       │   │  - Anomaly Classifier: 100% Prec│
-│  - Leaflet Geospatial Heat Map        │   │  - Rolling Regressor: 95.3% R²  │
-│  - Cross-Sensor Calibration Lab       │   │  - 7-Day Forward Risk Forecast  │
-│  - 12-Month Climatology Baselines     │   │  - Multi-Harmonic Seasonality   │
+│  - Harmonized Activity Calendar       │   │  - Calibrated Classifier (0.868)│
+│  - Leaflet Multi-Layer Map (OSM/Sat)  │   │  - Rolling Regressor: 95.3% R²  │
+│  - Spatial Corridor Risk Localization │   │  - 7-Day Regional Geographic FC │
+│  - Cross-Sensor Calibration Lab       │   │  - Multi-Harmonic Seasonality   │
 └───────────────────────────────────────┘   └─────────────────────────────────┘
 ```
 
@@ -89,18 +88,18 @@ Across complex Asian ecologies—spanning India, Pakistan, Afghanistan, Eastern 
 
 ---
 
-## 📊 Scientific Verification & AI Metrics
+## 📊 Scientific Verification & Calibration Metrics
 
-All models were evaluated using chronological out-of-time splits (Train: 2020–June 2025 [1,978 days]; Test: July 2025–Nov 2026 [494 days]) to prevent temporal data leakage:
+All models were evaluated using chronological out-of-time holdouts (Train: 2020–June 2025 [1,978 days]; Test: July 2025–Nov 2026 [494 days]) to prevent temporal data leakage:
 
-| Metric | Target | Achieved | Verification Status |
+| Metric | Target | Achieved | Operational Context |
 |---|---|---|---|
-| **Classifier High-Precision ($T=0.70$)** | $\ge 90.0\%$ | **100.0%** (0 false alarms) | ✅ Target Exceeded |
-| **Classifier Accuracy** | $\ge 90.0\%$ | **90.3%** | ✅ Target Exceeded |
-| **Classifier ROC-AUC** | $\ge 0.85$ | **0.8681** | ✅ Target Exceeded |
-| **Regression Fit ($R^2$)** | $\ge 90.0\%$ | **95.3%** ($R^2 = 0.953$) | ✅ Target Exceeded |
-| **Regression MAE** | $< 3.0$ pts | **1.50 HAI pts** | ✅ High Reliability |
-| **Total Authentic NASA Observations** | Multi-million | **20,935,359** | ✅ Fully Ingested |
+| **Continuous HAI Regressor ($R^2$)** | $\ge 90.0\%$ | **95.3%** ($R^2 = 0.953$) | High reliability across 1d/3d/7d horizons |
+| **Regression MAE** | $< 3.0$ pts | **1.50 HAI pts** | Standardized 0–100 HAI scale |
+| **Classifier ROC-AUC** | $\ge 0.85$ | **0.8681** | Strong ranking discrimination across all thresholds |
+| **Holdout Classification Accuracy** | $\ge 85.0\%$ | **89.3%** | 441/494 holdout days correctly classified |
+| **Operational High-Confidence Alert ($T=0.50$)** | Baseline | **65.5% – 92.3%** | Honest precision curve with documented false alarms |
+| **Total Authentic NASA Observations** | Multi-million | **20,935,359** | Fully ingested & harmonized |
 
 ---
 

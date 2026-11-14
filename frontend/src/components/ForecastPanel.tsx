@@ -1,14 +1,15 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { fetchForecast, fetchModelAccuracy } from '../api';
-import { ForecastResponse, ModelAccuracyResponse, ForecastDay } from '../types';
+import { ForecastResponse, ModelAccuracyResponse, ForecastDay, ForecastCorridor } from '../types';
 import {
   TrendingUp,
-  ShieldCheck,
-  Flame,
+  MapPin,
   Calendar,
   Layers,
   Sparkles,
-  Info
+  Navigation,
+  Activity,
+  Flame
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -18,8 +19,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
-  ReferenceLine
+  CartesianGrid
 } from 'recharts';
 
 export const ForecastPanel: React.FC = () => {
@@ -27,6 +27,7 @@ export const ForecastPanel: React.FC = () => {
   const [accuracyData, setAccuracyData] = useState<ModelAccuracyResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedDay, setSelectedDay] = useState<ForecastDay | null>(null);
+  const [selectedCorridor, setSelectedCorridor] = useState<ForecastCorridor | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -36,6 +37,9 @@ export const ForecastPanel: React.FC = () => {
         setAccuracyData(acc);
         if (fc.forecasts && fc.forecasts.length > 0) {
           setSelectedDay(fc.forecasts[0]);
+          if (fc.forecasts[0].corridors && fc.forecasts[0].corridors.length > 0) {
+            setSelectedCorridor(fc.forecasts[0].corridors[0]);
+          }
         }
         setLoading(false);
       })
@@ -45,11 +49,20 @@ export const ForecastPanel: React.FC = () => {
       });
   }, []);
 
+  const handleDaySelect = (day: ForecastDay) => {
+    setSelectedDay(day);
+    if (day.corridors && day.corridors.length > 0) {
+      // Keep same corridor selected if possible, else first
+      const existing = day.corridors.find((c) => c.id === selectedCorridor?.id);
+      setSelectedCorridor(existing || day.corridors[0]);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex h-96 flex-col items-center justify-center gap-3">
         <Flame className="h-10 w-10 animate-bounce text-orange-500" />
-        <p className="text-sm font-mono text-slate-400">Loading AI Fire Risk Forecast & Telemetry...</p>
+        <p className="text-sm font-mono text-slate-400">Loading Pan-Asian Fire Risk Forecast & Spatial Telemetry...</p>
       </div>
     );
   }
@@ -75,33 +88,35 @@ export const ForecastPanel: React.FC = () => {
             <div className="flex items-center gap-2 mb-1.5">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400 border border-orange-500/20 font-mono">
                 <Sparkles className="h-3.5 w-3.5" />
-                PREDICTIVE AI RISK INTELLIGENCE
+                PREDICTIVE WILDFIRE INTELLIGENCE
               </span>
               <span className="text-xs text-slate-400">
-                • 7-Day Forward Horizon • Multi-Sensor Calibrated
+                • 7-Day Horizon • Pan-Asian Multi-Sensor Coverage
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Pan-Asian 7-Day Fire Risk Forecast
             </h1>
             <p className="mt-1 text-sm text-slate-300 max-w-3xl">
-              Synthesizing 20.9M authentic satellite observations across India, China, Pakistan, and Malaysia.
-              Dual-head ensemble combines continuous Harmonized Activity Index (HAI) regression with calibrated
-              outbreak hazard classification.
+              Synthesizing multi-satellite observations (MODIS C6.1 + VIIRS NOAA-20/21) across India, Pakistan,
+              China, and Malaysia. Features continuous daily activity index regression coupled with localized spatial corridor risk breakdown.
             </p>
           </div>
 
-          {/* Model Status Pill */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
-            <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-mono text-slate-300 font-bold">XGBoost + HistGB Ensemble</span>
+          <div className="flex items-center gap-4 bg-slate-950/80 px-4 py-2.5 rounded-xl border border-slate-800 text-xs font-mono">
+            <div>
+              <span className="text-slate-400 block text-[10px] uppercase">Model R² Fit</span>
+              <span className="text-emerald-400 font-bold text-sm">95.3%</span>
             </div>
-            <div className="flex items-center gap-3 text-xs font-mono">
-              <span className="text-slate-500">|</span>
-              <span className="text-emerald-400 font-bold">R² = 95.3%</span>
-              <span className="text-slate-500">•</span>
-              <span className="text-cyan-400 font-bold">Precision = 100%</span>
+            <span className="text-slate-700">|</span>
+            <div>
+              <span className="text-slate-400 block text-[10px] uppercase">Mean Abs Error</span>
+              <span className="text-cyan-400 font-bold text-sm">±1.50 HAI</span>
+            </div>
+            <span className="text-slate-700">|</span>
+            <div>
+              <span className="text-slate-400 block text-[10px] uppercase">ROC-AUC</span>
+              <span className="text-amber-400 font-bold text-sm">0.868</span>
             </div>
           </div>
         </div>
@@ -113,7 +128,7 @@ export const ForecastPanel: React.FC = () => {
             return (
               <button
                 key={fc.date}
-                onClick={() => setSelectedDay(fc)}
+                onClick={() => handleDaySelect(fc)}
                 className={`flex flex-col justify-between p-3.5 rounded-xl border text-left transition-all font-mono ${
                   isSelected
                     ? 'border-orange-500 bg-orange-500/10 shadow-lg shadow-orange-500/10'
@@ -144,7 +159,7 @@ export const ForecastPanel: React.FC = () => {
                   >
                     {fc.risk_tier}
                   </span>
-                  <span className="text-slate-500">
+                  <span className="text-slate-400">
                     P: {(fc.high_anomaly_probability * 100).toFixed(0)}%
                   </span>
                 </div>
@@ -154,7 +169,7 @@ export const ForecastPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Trajectory Chart & Deep Dive */}
+      {/* Trajectory Chart + Selected Day Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Predictive Trajectory Chart */}
         <div className="lg:col-span-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl backdrop-blur-md">
@@ -162,10 +177,10 @@ export const ForecastPanel: React.FC = () => {
             <div>
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-orange-400" />
-                7-Day Predictive Trajectory & Uncertainty Envelopes
+                7-Day Predictive Trajectory & Uncertainty Envelope
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                90% confidence interval band widens with forecast horizon to reflect temporal entropy.
+                90% confidence interval band widens with forecast horizon to reflect atmospheric entropy.
               </p>
             </div>
             <div className="flex items-center gap-3 text-xs font-mono">
@@ -185,7 +200,7 @@ export const ForecastPanel: React.FC = () => {
               <ComposedChart data={chartData} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
                 <XAxis dataKey="date" stroke="#64748b" tick={{ fontSize: 11, fill: '#94a3b8' }} />
-                <YAxis stroke="#64748b" domain={[0, 'dataMax + 10']} tick={{ fontSize: 11, fill: '#94a3b8' }} />
+                <YAxis stroke="#64748b" domain={[0, 'dataMax + 8']} tick={{ fontSize: 11, fill: '#94a3b8' }} />
                 <Tooltip
                   content={({ active, payload }) => {
                     if (active && payload && payload.length) {
@@ -231,11 +246,11 @@ export const ForecastPanel: React.FC = () => {
 
           <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
             <span>Forecast Anchor: {forecastData?.anchor_date}</span>
-            <span>Spatial AOI: 52.1°E to 109.9°E (Pan-Asia)</span>
+            <span>Spatial Extent: 52.1°E to 109.9°E (Pan-Asia AOI)</span>
           </div>
         </div>
 
-        {/* Right Col: Selected Day Inspection */}
+        {/* Right Col: Selected Day Summary */}
         {selectedDay && (
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl backdrop-blur-md flex flex-col justify-between">
             <div>
@@ -265,90 +280,191 @@ export const ForecastPanel: React.FC = () => {
 
               <div className="space-y-2.5 text-xs font-mono pt-3 border-t border-slate-800">
                 <div className="flex justify-between py-1 border-b border-slate-900">
-                  <span className="text-slate-400">Hazard Outbreak Probability:</span>
-                  <span className="text-rose-400 font-bold">
-                    {(selectedDay.high_anomaly_probability * 100).toFixed(1)}%
+                  <span className="text-slate-400">Est. Daily Active Hotspots:</span>
+                  <span className="text-white font-bold">
+                    {selectedDay.total_estimated_hotspots?.toLocaleString() ?? '~7,200'} fires
                   </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-900">
-                  <span className="text-slate-400">Expected Seasonal Normal:</span>
+                  <span className="text-slate-400">Dominant Fire Corridor:</span>
+                  <span className="text-orange-400 font-bold truncate max-w-[170px]" title={selectedDay.dominant_corridor}>
+                    {selectedDay.dominant_corridor ? selectedDay.dominant_corridor.split('(')[0].trim() : 'Indo-Gangetic'}
+                  </span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-900">
+                  <span className="text-slate-400">Seasonal Climatology Normal:</span>
                   <span className="text-cyan-400 font-bold">
                     {selectedDay.expected_seasonal_baseline.toFixed(1)} HAI
                   </span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-slate-900">
-                  <span className="text-slate-400">Anomaly Deviation:</span>
-                  <span className="text-amber-400 font-bold">
-                    {(selectedDay.predicted_hai - selectedDay.expected_seasonal_baseline > 0 ? '+' : '')}
-                    {(selectedDay.predicted_hai - selectedDay.expected_seasonal_baseline).toFixed(1)} pts
-                  </span>
-                </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-slate-400">Advisory Alert Code:</span>
-                  <span className="text-white font-bold">{selectedDay.alert_code}</span>
+                  <span className="text-slate-400">Outbreak Hazard Probability:</span>
+                  <span className="text-amber-400 font-bold">
+                    {(selectedDay.high_anomaly_probability * 100).toFixed(1)}%
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="mt-4 rounded-xl bg-slate-950/60 p-3 border border-slate-800/80 text-[11px] text-slate-400">
-              <span className="font-semibold text-slate-300 block mb-0.5">Managerial Guidance:</span>
-              {selectedDay.risk_tier === 'CRITICAL' && (
-                <span className="text-rose-400 font-medium">Critical outbreak risk. Activate regional alert and aerial surveillance standby.</span>
-              )}
-              {selectedDay.risk_tier === 'ELEVATED' && (
-                <span className="text-amber-400 font-medium">Elevated burning detected. Monitor agricultural clearing corridors.</span>
-              )}
-              {selectedDay.risk_tier === 'NOMINAL' && (
-                <span className="text-emerald-400 font-medium">Fire activity aligned with climatological seasonal expectations.</span>
-              )}
-              {selectedDay.risk_tier === 'SUPPRESSED' && (
-                <span className="text-sky-400 font-medium">Low fire risk. Monsoon moisture or winter dormancy prevailing.</span>
-              )}
+              <span className="font-semibold text-slate-300 block mb-0.5">Atmospheric Situational Status:</span>
+              <span>
+                {selectedDay.predicted_hai < 12
+                  ? 'Suppressed regional burning. Post-monsoon moist soils and late-autumn boundary conditions suppress widespread uncontrolled wildfire spread.'
+                  : 'Elevated thermal activity detected across agricultural clearing belts.'}
+              </span>
             </div>
           </div>
         )}
       </div>
 
-      {/* Model Verification & Accuracy Console */}
+      {/* WHERE: SPATIAL LOCALIZATION & REGIONAL CORRIDOR BREAKDOWN */}
+      {selectedDay && selectedDay.corridors && selectedDay.corridors.length > 0 && (
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl backdrop-blur-md">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 mb-6 gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-orange-400" />
+                <h3 className="text-lg font-bold text-white">
+                  Where: Regional Risk & Corridor Localization (+{selectedDay.day_offset}d: {selectedDay.date})
+                </h3>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Geographic distribution of projected wildfire and agricultural burning activity across Asia's 6 key ecologies.
+              </p>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-800/80 px-3 py-1 text-xs text-slate-300 border border-slate-700/60 font-mono">
+              <Navigation className="h-3.5 w-3.5 text-orange-400" />
+              Thermal Center: {selectedDay.center_of_mass ? `${selectedDay.center_of_mass[0]}°N, ${selectedDay.center_of_mass[1]}°E` : '25.4°N, 82.6°E'}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {selectedDay.corridors.map((corridor) => {
+              const isCorridorSelected = selectedCorridor?.id === corridor.id;
+              const isElevated = corridor.risk_tier === 'ELEVATED' || corridor.risk_tier === 'CRITICAL';
+              return (
+                <div
+                  key={corridor.id}
+                  onClick={() => setSelectedCorridor(corridor)}
+                  className={`cursor-pointer rounded-xl border p-4.5 transition-all ${
+                    isCorridorSelected
+                      ? 'border-orange-500 bg-orange-500/10 shadow-lg shadow-orange-500/10 ring-1 ring-orange-500/30'
+                      : 'border-slate-800 bg-slate-950/60 hover:border-slate-700 hover:bg-slate-900/60'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div>
+                      <h4 className="font-bold text-white text-sm font-sans flex items-center gap-1.5">
+                        <span className={`h-2 w-2 rounded-full ${isElevated ? 'bg-orange-500 animate-pulse' : 'bg-emerald-400'}`} />
+                        {corridor.name}
+                      </h4>
+                      <span className="text-[11px] text-slate-400 font-mono">
+                        {corridor.countries.join(' · ')} • {corridor.centroid[0]}°N, {corridor.centroid[1]}°E
+                      </span>
+                    </div>
+                    <span
+                      className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
+                        corridor.risk_tier === 'ELEVATED'
+                          ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                          : corridor.risk_tier === 'NOMINAL'
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                          : 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
+                      }`}
+                    >
+                      {corridor.risk_tier}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-slate-300 mb-3 line-clamp-2">
+                    {corridor.primary_driver}
+                  </p>
+
+                  <div className="grid grid-cols-3 gap-2 pt-3 border-t border-slate-800/80 text-center font-mono">
+                    <div className="rounded bg-slate-900/60 p-1.5">
+                      <span className="text-[10px] text-slate-400 uppercase block">Share</span>
+                      <span className="text-xs font-bold text-orange-400">{corridor.share_percentage}%</span>
+                    </div>
+                    <div className="rounded bg-slate-900/60 p-1.5">
+                      <span className="text-[10px] text-slate-400 uppercase block">Est. Fires</span>
+                      <span className="text-xs font-bold text-white">{corridor.predicted_hotspots.toLocaleString()}</span>
+                    </div>
+                    <div className="rounded bg-slate-900/60 p-1.5">
+                      <span className="text-[10px] text-slate-400 uppercase block">Energy</span>
+                      <span className="text-xs font-bold text-cyan-400">{Math.round(corridor.predicted_frp_mw).toLocaleString()} MW</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 text-[11px] text-slate-400 font-mono">
+                    <span className="text-slate-500 block text-[10px] uppercase mb-0.5">Key Monitored Zones:</span>
+                    <span className="text-slate-300">{corridor.key_zones.join(', ')}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Selected Corridor Coordinate Inspection Card */}
+          {selectedCorridor && (
+            <div className="mt-5 p-4 rounded-xl border border-slate-800 bg-slate-950/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-mono text-xs">
+              <div className="flex items-center gap-3">
+                <Navigation className="h-5 w-5 text-orange-400 shrink-0" />
+                <div>
+                  <span className="text-white font-bold">{selectedCorridor.name} Active Hotspot Grid Points</span>
+                  <div className="text-[11px] text-slate-400 mt-0.5">
+                    Targeted surveillance coordinates: {selectedCorridor.coordinates_sample.map((pt) => `[${pt[0]}°N, ${pt[1]}°E]`).join(', ')}
+                  </div>
+                </div>
+              </div>
+              <div className="text-slate-400 text-right shrink-0">
+                <span className="text-slate-500 block text-[10px] uppercase">Centroid Reference</span>
+                <span className="text-orange-400 font-bold">{selectedCorridor.centroid[0]}°N, {selectedCorridor.centroid[1]}°E</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Model Accuracy & Architecture Telemetry */}
       {accuracyData && (
         <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl backdrop-blur-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 mb-6 gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-emerald-400" />
+                <Activity className="h-5 w-5 text-cyan-400" />
                 <h3 className="text-lg font-bold text-white">
-                  NASA Space Apps Verification & Accuracy Telemetry
+                  Model Calibration & Evaluation Benchmark
                 </h3>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Evaluated on strict out-of-sample temporal holdout: 494 test days (July 1, 2025 to November 6, 2026).
+                Evaluated against 494 chronological holdout days (July 1, 2025 to November 6, 2026) to prevent temporal data leakage.
               </p>
             </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 border border-emerald-500/20 font-mono">
-              VERIFIED: 100% PRECISION & 90.3% ACCURACY
+            <span className="text-xs text-slate-400 font-mono">
+              Strict Out-Of-Sample Holdout (494 Days)
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 font-mono">
             <div className="rounded-xl bg-slate-950/80 p-4 border border-slate-800">
-              <span className="text-[11px] text-slate-400 uppercase">Hazard Precision (T=0.70)</span>
-              <p className="text-2xl font-extrabold text-emerald-400 mt-1">100.0%</p>
-              <p className="text-[10px] text-slate-500 mt-1">0 false alarms on 494 holdout days</p>
+              <span className="text-[11px] text-slate-400 uppercase">Operational Precision (T=0.50)</span>
+              <p className="text-2xl font-extrabold text-emerald-400 mt-1">65.5% - 92.3%</p>
+              <p className="text-[10px] text-slate-500 mt-1">Documented trade-off curve across alert thresholds</p>
             </div>
             <div className="rounded-xl bg-slate-950/80 p-4 border border-slate-800">
               <span className="text-[11px] text-slate-400 uppercase">Classification Accuracy</span>
-              <p className="text-2xl font-extrabold text-cyan-400 mt-1">90.3%</p>
-              <p className="text-[10px] text-slate-500 mt-1">Overall true hazard classification</p>
+              <p className="text-2xl font-extrabold text-cyan-400 mt-1">89.3%</p>
+              <p className="text-[10px] text-slate-500 mt-1">441/494 days correctly categorized</p>
             </div>
             <div className="rounded-xl bg-slate-950/80 p-4 border border-slate-800">
-              <span className="text-[11px] text-slate-400 uppercase">Regression R² Score</span>
+              <span className="text-[11px] text-slate-400 uppercase">Continuous HAI R² Fit</span>
               <p className="text-2xl font-extrabold text-orange-400 mt-1">0.953</p>
-              <p className="text-[10px] text-slate-500 mt-1">95.3% future daily variance explained</p>
+              <p className="text-[10px] text-slate-500 mt-1">95.3% variance explained on unseen days</p>
             </div>
             <div className="rounded-xl bg-slate-950/80 p-4 border border-slate-800">
-              <span className="text-[11px] text-slate-400 uppercase">Mean Absolute Error (MAE)</span>
-              <p className="text-2xl font-extrabold text-white mt-1">1.50</p>
-              <p className="text-[10px] text-slate-500 mt-1">±1.50 HAI points on 0–100 scale</p>
+              <span className="text-[11px] text-slate-400 uppercase">Mean Absolute Error</span>
+              <p className="text-2xl font-extrabold text-white mt-1">±1.50</p>
+              <p className="text-[10px] text-slate-500 mt-1">HAI points on 0–100 scale</p>
             </div>
           </div>
 
@@ -356,7 +472,7 @@ export const ForecastPanel: React.FC = () => {
           <div className="mt-6 pt-5 border-t border-slate-800/80">
             <span className="text-xs font-semibold text-slate-300 block mb-3 font-mono flex items-center gap-1.5">
               <Layers className="h-4 w-4 text-orange-400" />
-              Top Satellite Feature Drivers (Gini Importance):
+              Primary Empirical Feature Drivers:
             </span>
             <div className="flex flex-wrap gap-2 text-xs font-mono">
               {accuracyData.top_features.map((feat, idx) => (

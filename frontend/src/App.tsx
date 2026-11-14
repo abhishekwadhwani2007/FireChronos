@@ -122,9 +122,9 @@ export function App() {
               <ExternalLink className="h-3 w-3" />
             </a>
             <span>•</span>
-            <span className="text-emerald-400 font-mono flex items-center gap-1">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              100% Authentic NASA Observations
+            <span className="text-slate-400 font-mono flex items-center gap-1">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              NASA FIRMS Observation Record
             </span>
           </div>
         </div>
