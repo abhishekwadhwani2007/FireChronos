@@ -9,6 +9,7 @@
 
 ## 🚀 Live Application Status
 
+- **Production Cloud Deployment:** [https://firechronos.embarko.app](https://firechronos.embarko.app) (Permanent high-performance cloud hosting)
 - **Web Frontend:** `http://localhost:5173` (Vite + React + TypeScript + Tailwind CSS)
 - **API Server:** `http://localhost:8000` (FastAPI + Uvicorn + SQLite)
 - **Interactive API Documentation:** `http://localhost:8000/docs` (Swagger UI)
