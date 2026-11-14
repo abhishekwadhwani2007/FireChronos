@@ -34,9 +34,16 @@ export const DayDetailModal: React.FC<DayDetailModalProps> = ({ dayDetail, loadi
       map.invalidateSize();
     }, 150);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 18,
-    }).addTo(map);
+    // Zero-Key Esri Dark Canvas (Clean, no API key watermark)
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 16, attribution: 'Tiles © Esri' }
+    ).addTo(map);
+
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}',
+      { maxZoom: 16, pane: 'overlayPane' }
+    ).addTo(map);
 
     if (dayDetail.top_hotspots && dayDetail.top_hotspots.length > 0) {
       const markers: L.CircleMarker[] = [];

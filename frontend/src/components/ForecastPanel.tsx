@@ -62,7 +62,7 @@ export const ForecastPanel: React.FC = () => {
   if (loading) {
     return (
       <div className="flex h-96 flex-col items-center justify-center gap-3">
-        <Flame className="h-10 w-10 animate-bounce text-orange-500" />
+        <Flame className="h-10 w-10 animate-bounce text-sky-400" />
         <p className="text-sm font-mono text-slate-400">Loading Pan-Asian Fire Risk Forecast & Spatial Telemetry...</p>
       </div>
     );
@@ -87,8 +87,8 @@ export const ForecastPanel: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400 border border-orange-500/20 font-mono">
-                <Sparkles className="h-3.5 w-3.5" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-400 border border-sky-500/20 font-mono">
+                <Sparkles className="h-3.5 w-3.5 text-sky-400" />
                 PREDICTIVE WILDFIRE INTELLIGENCE
               </span>
               <span className="text-xs text-slate-400">
@@ -132,7 +132,7 @@ export const ForecastPanel: React.FC = () => {
                 onClick={() => handleDaySelect(fc)}
                 className={`flex flex-col justify-between p-3.5 rounded-xl border text-left transition-all font-mono ${
                   isSelected
-                    ? 'border-orange-500 bg-orange-500/10 shadow-lg shadow-orange-500/10'
+                    ? 'border-sky-500 bg-sky-500/15 shadow-lg shadow-sky-500/10 ring-1 ring-sky-500/40'
                     : 'border-slate-800 bg-slate-950/60 hover:border-slate-700 hover:bg-slate-900/60'
                 }`}
               >
@@ -256,7 +256,7 @@ export const ForecastPanel: React.FC = () => {
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-xl backdrop-blur-md flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-                <span className="text-xs font-bold text-orange-400 flex items-center gap-1.5 font-mono">
+                <span className="text-xs font-bold text-sky-400 flex items-center gap-1.5 font-mono">
                   <Calendar className="h-4 w-4" />
                   Day +{selectedDay.day_offset} Detail
                 </span>
@@ -288,7 +288,7 @@ export const ForecastPanel: React.FC = () => {
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-900">
                   <span className="text-slate-400">Dominant Fire Corridor:</span>
-                  <span className="text-orange-400 font-bold truncate max-w-[170px]" title={selectedDay.dominant_corridor}>
+                  <span className="text-sky-400 font-bold truncate max-w-[170px]" title={selectedDay.dominant_corridor}>
                     {selectedDay.dominant_corridor ? selectedDay.dominant_corridor.split('(')[0].trim() : 'Indo-Gangetic'}
                   </span>
                 </div>
@@ -325,7 +325,7 @@ export const ForecastPanel: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 mb-6 gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-orange-400" />
+                <MapPin className="h-5 w-5 text-sky-400" />
                 <h3 className="text-lg font-bold text-white">
                   Where: Regional Risk & Corridor Localization (+{selectedDay.day_offset}d: {selectedDay.date})
                 </h3>
@@ -335,12 +335,12 @@ export const ForecastPanel: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs text-orange-400 border border-orange-500/20 font-mono font-bold">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-500/10 px-3 py-1 text-xs text-sky-400 border border-sky-500/20 font-mono font-bold">
                 <Sparkles className="h-3.5 w-3.5" />
                 {selectedDay.dominant_corridor}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-800/80 px-3 py-1 text-xs text-slate-300 border border-slate-700/60 font-mono">
-                <Navigation className="h-3.5 w-3.5 text-orange-400" />
+                <Navigation className="h-3.5 w-3.5 text-sky-400" />
                 Center: {selectedDay.center_of_mass ? `${selectedDay.center_of_mass[0]}°N, ${selectedDay.center_of_mass[1]}°E` : '25.4°N, 82.6°E'}
               </span>
             </div>
@@ -350,14 +350,14 @@ export const ForecastPanel: React.FC = () => {
           <div className="mb-5 rounded-xl border border-slate-800 bg-slate-950/80 p-3.5">
             <div className="flex items-center justify-between text-xs font-mono mb-2">
               <span className="text-slate-300 font-semibold flex items-center gap-1.5">
-                <Globe className="h-3.5 w-3.5 text-orange-400" />
+                <Globe className="h-3.5 w-3.5 text-sky-400" />
                 Day +{selectedDay.day_offset} Corridor Proportion Distribution
               </span>
               <span className="text-slate-400 text-[11px]">100% Normalized</span>
             </div>
             <div className="h-2.5 w-full rounded-full bg-slate-900 flex overflow-hidden border border-slate-800">
               {selectedDay.corridors.map((c, i) => {
-                const colors = ['#f97316', '#ef4444', '#10b981', '#06b6d4', '#f59e0b', '#8b5cf6'];
+                const colors = ['#0284c7', '#06b6d4', '#10b981', '#3b82f6', '#f59e0b', '#8b5cf6'];
                 return (
                   <div
                     key={c.id}
@@ -381,7 +381,7 @@ export const ForecastPanel: React.FC = () => {
                   onClick={() => setSelectedCorridor(corridor)}
                   className={`cursor-pointer rounded-xl border p-4.5 transition-all ${
                     isCorridorSelected
-                      ? 'border-orange-500 bg-orange-500/10 shadow-lg shadow-orange-500/10 ring-1 ring-orange-500/30'
+                      ? 'border-sky-500 bg-sky-500/15 shadow-lg shadow-sky-500/10 ring-1 ring-sky-500/40'
                       : 'border-slate-800 bg-slate-950/60 hover:border-slate-700 hover:bg-slate-900/60'
                   }`}
                 >

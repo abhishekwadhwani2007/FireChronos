@@ -1,23 +1,64 @@
 ﻿@import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+@theme inline {
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --color-background: var(--bg-0);
+  --color-foreground: var(--text-100);
+}
+
 :root {
   color-scheme: dark;
+  --bg-0: #060913;
+  --bg-100: #0b1120;
+  --bg-200: #131c31;
+  --bg-300: #1e293b;
+  --text-100: #f8fafc;
+  --text-200: #e2e8f0;
+  --text-300: #94a3b8;
+  --text-400: #64748b;
+  --radius: 0.75rem;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #080d1a;
+  background-color: #060913;
   color: #f1f5f9;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   min-height: 100vh;
   overflow-x: hidden;
 }
 
+/* Animations for Hero and Interactive Components */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-slide-in-1 {
+  animation: fadeSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+.animate-fade-slide-in-2 {
+  animation: fadeSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+.animate-fade-slide-in-3 {
+  animation: fadeSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+.animate-fade-slide-in-4 {
+  animation: fadeSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
 /* Leaflet dark theme adjustments */
 .leaflet-container {
-  background: #070b14 !important;
+  background: #060913 !important;
   font-family: inherit;
 }
 
@@ -27,7 +68,7 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b1120;
+  background: #080d1a;
 }
 ::-webkit-scrollbar-thumb {
   background: #1e293b;

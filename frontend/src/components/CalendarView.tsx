@@ -132,8 +132,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400 border border-orange-500/20 font-mono">
-                <Flame className="h-3.5 w-3.5 text-orange-500" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-400 border border-sky-500/20 font-mono">
+                <Globe2 className="h-3.5 w-3.5 text-sky-400" />
                 TRANSTERRITORIAL FIRE INTELLIGENCE
               </span>
               <span className="text-xs text-slate-400">• Click any day for satellite drilldown</span>
@@ -157,7 +157,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 onClick={() => setMode('harmonized')}
                 className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${
                   mode === 'harmonized'
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md'
+                    ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md shadow-blue-500/25'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -168,7 +168,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 onClick={() => setMode('viirs')}
                 className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${
                   mode === 'viirs'
-                    ? 'bg-orange-500 text-slate-950 shadow-md'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/25'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -178,7 +178,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 onClick={() => setMode('modis')}
                 className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-all ${
                   mode === 'modis'
-                    ? 'bg-cyan-500 text-slate-950 shadow-md'
+                    ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/25'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -192,7 +192,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
         <div className="mt-6 pt-5 border-t border-slate-800/80">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
             <div className="flex items-center gap-2">
-              <Globe2 className="h-4 w-4 text-orange-400" />
+              <Globe2 className="h-4 w-4 text-sky-400" />
               <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">
                 Pan-Asian Regional Fire Distribution
               </span>
@@ -202,7 +202,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             </div>
             <button
               onClick={() => setShowRegionalPanel(!showRegionalPanel)}
-              className="text-xs font-mono text-slate-400 hover:text-orange-400 transition-colors flex items-center gap-1 self-start sm:self-auto"
+              className="text-xs font-mono text-slate-400 hover:text-sky-400 transition-colors flex items-center gap-1 self-start sm:self-auto"
             >
               {showRegionalPanel ? 'Compact View' : 'Show Regional Drivers'}
               <ChevronDown className={`h-3.5 w-3.5 transition-transform ${showRegionalPanel ? 'rotate-180' : ''}`} />
@@ -228,7 +228,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               onClick={() => setSelectedCountry('all')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all ${
                 selectedCountry === 'all'
-                  ? 'border-orange-500 bg-orange-500/20 text-white font-bold shadow-sm shadow-orange-500/20'
+                  ? 'border-sky-500 bg-sky-500/20 text-white font-bold shadow-sm shadow-sky-500/20 ring-1 ring-sky-500/40'
                   : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'
               }`}
             >
@@ -244,7 +244,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                   onClick={() => setSelectedCountry(r.id)}
                   className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-mono transition-all ${
                     isSelected
-                      ? 'border-orange-500 bg-orange-500/20 text-white font-bold shadow-sm shadow-orange-500/20 ring-1 ring-orange-500/40'
+                      ? 'border-sky-500 bg-sky-500/20 text-white font-bold shadow-sm shadow-sky-500/20 ring-1 ring-sky-500/40'
                       : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'
                   }`}
                 >
@@ -258,7 +258,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
           {/* Active Country Intelligence Strip */}
           {selectedCountry !== 'all' && currentCountryMeta && (
-            <div className="mt-3 p-3 rounded-xl border border-orange-500/30 bg-orange-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs">
+            <div className="mt-3 p-3 rounded-xl border border-sky-500/30 bg-sky-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs">
               <div className="flex items-center gap-2.5">
                 <span className="text-xl">{currentCountryMeta.flag}</span>
                 <div>
@@ -269,7 +269,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               <div className="flex items-center gap-4 text-[11px] shrink-0 text-slate-300">
                 <div>
                   <span className="text-slate-400 block text-[10px] uppercase">Peak Burning Season</span>
-                  <span className="text-orange-400 font-bold">{currentCountryMeta.peak}</span>
+                  <span className="text-sky-400 font-bold">{currentCountryMeta.peak}</span>
                 </div>
                 <div className="border-l border-slate-700 pl-4">
                   <span className="text-slate-400 block text-[10px] uppercase">Domain Share</span>
@@ -291,13 +291,13 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
                 {mode === 'harmonized' ? 'VIIRS Detections' : mode === 'viirs' ? 'VIIRS 375m Count' : 'MODIS Calibrated'}
               </span>
-              <p className="text-lg font-bold text-orange-400 font-mono mt-0.5">
+              <p className="text-lg font-bold text-sky-400 font-mono mt-0.5">
                 {filteredDays.reduce((acc, d) => acc + d.count, 0).toLocaleString()}
               </p>
             </div>
             <div className="rounded-lg bg-slate-900/60 p-3 border border-slate-800">
               <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Total FRP Energy</span>
-              <p className="text-lg font-bold text-amber-400 font-mono mt-0.5">
+              <p className="text-lg font-bold text-cyan-400 font-mono mt-0.5">
                 {(filteredDays.reduce((acc, d) => acc + d.frp_sum, 0) / 1000).toFixed(1)}k MW
               </p>
             </div>
@@ -328,7 +328,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
             onClick={() => setSelectedYear('all')}
             className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
               selectedYear === 'all'
-                ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                ? 'bg-sky-600 text-white font-bold shadow-md shadow-sky-600/30'
                 : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
           >
@@ -340,7 +340,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               onClick={() => setSelectedYear(y)}
               className={`rounded-lg px-2.5 py-1 text-xs font-medium font-mono transition-all ${
                 selectedYear === y
-                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  ? 'bg-sky-600 text-white font-bold shadow-md shadow-sky-600/30'
                   : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
               }`}
             >
@@ -467,9 +467,9 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
       {/* Floating Hover Tooltip Bar */}
       {hoveredDay && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 rounded-xl border border-orange-500/40 bg-slate-950/95 px-5 py-3 shadow-2xl shadow-orange-500/20 backdrop-blur-md">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 rounded-xl border border-sky-500/40 bg-slate-950/95 px-5 py-3 shadow-2xl shadow-sky-500/20 backdrop-blur-md">
           <div className="flex items-center gap-2 border-r border-slate-800 pr-4">
-            <Flame className="h-5 w-5 text-orange-500 animate-pulse" />
+            <Flame className="h-5 w-5 text-sky-400 animate-pulse" />
             <div>
               <span className="text-xs text-slate-400 font-mono">Date</span>
               <p className="text-sm font-bold text-white font-mono">{hoveredDay.date}</p>
@@ -477,7 +477,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
           </div>
           <div>
             <span className="text-xs text-slate-400">Harmonized Index</span>
-            <p className="text-sm font-bold text-orange-400 font-mono">HAI {hoveredDay.hai}</p>
+            <p className="text-sm font-bold text-sky-400 font-mono">HAI {hoveredDay.hai}</p>
           </div>
           <div className="border-l border-slate-800 pl-4">
             <span className="text-xs text-slate-400">Detections (VIIRS / MODIS)</span>

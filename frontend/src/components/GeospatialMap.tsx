@@ -344,8 +344,8 @@ export const GeospatialMap: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400 border border-orange-500/20 font-mono">
-                <MapPin className="h-3.5 w-3.5" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-sky-500/10 px-3 py-1 text-xs font-semibold text-sky-400 border border-sky-500/20 font-mono">
+                <MapPin className="h-3.5 w-3.5 text-sky-400" />
                 PAN-ASIAN GEOSPATIAL INTELLIGENCE
               </span>
               <span className="text-xs text-slate-400">
@@ -363,13 +363,13 @@ export const GeospatialMap: React.FC = () => {
 
           {/* Basemap Switcher (Clean Esri & OSM - No API Key, No Watermark) */}
           <div className="flex items-center gap-1.5 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800 font-mono text-xs shrink-0">
-            <Globe className="h-4 w-4 text-slate-400 ml-2" />
+            <Globe className="h-4 w-4 text-sky-400 ml-2" />
             <span className="text-slate-400 mr-1 text-[11px]">Basemap:</span>
             <button
               onClick={() => setBaseMap('dark')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 baseMap === 'dark'
-                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-500/25'
                   : 'text-slate-300 hover:text-white hover:bg-slate-900'
               }`}
             >
@@ -379,7 +379,7 @@ export const GeospatialMap: React.FC = () => {
               onClick={() => setBaseMap('satellite')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 baseMap === 'satellite'
-                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-500/25'
                   : 'text-slate-300 hover:text-white hover:bg-slate-900'
               }`}
             >
@@ -389,7 +389,7 @@ export const GeospatialMap: React.FC = () => {
               onClick={() => setBaseMap('osm')}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                 baseMap === 'osm'
-                  ? 'bg-orange-500 text-slate-950 font-bold shadow'
+                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-500/25'
                   : 'text-slate-300 hover:text-white hover:bg-slate-900'
               }`}
             >
@@ -402,13 +402,13 @@ export const GeospatialMap: React.FC = () => {
         <div className="mt-6 pt-5 border-t border-slate-800/80">
           <div className="flex items-center justify-between gap-2 mb-2.5">
             <span className="text-xs font-mono text-slate-400 uppercase font-semibold flex items-center gap-1.5">
-              <Compass className="h-3.5 w-3.5 text-orange-400" />
+              <Compass className="h-3.5 w-3.5 text-sky-400" />
               Pan-Asian Country Domains & Fire Share:
             </span>
             {selectedZone && (
               <button
                 onClick={resetView}
-                className="text-xs font-mono text-orange-400 hover:text-orange-300 flex items-center gap-1 transition-colors"
+                className="text-xs font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1 transition-colors"
               >
                 <Maximize2 className="h-3 w-3" />
                 Reset Pan-Asia View
@@ -418,11 +418,11 @@ export const GeospatialMap: React.FC = () => {
 
           {/* Regional Fire Distribution Bar */}
           <div className="h-2 w-full rounded-full bg-slate-950 flex overflow-hidden border border-slate-800 mb-3 shadow-inner">
-            <div style={{ width: '41.9%', backgroundColor: '#f97316' }} title="India: 41.9%" />
-            <div style={{ width: '35.2%', backgroundColor: '#ef4444' }} title="China: 35.2%" />
+            <div style={{ width: '41.9%', backgroundColor: '#0284c7' }} title="India: 41.9%" />
+            <div style={{ width: '35.2%', backgroundColor: '#06b6d4' }} title="China: 35.2%" />
             <div style={{ width: '8.0%', backgroundColor: '#10b981' }} title="Pakistan: 8.0%" />
             <div style={{ width: '5.8%', backgroundColor: '#f59e0b' }} title="Eastern Iran: 5.8%" />
-            <div style={{ width: '4.4%', backgroundColor: '#06b6d4' }} title="Afghanistan: 4.4%" />
+            <div style={{ width: '4.4%', backgroundColor: '#3b82f6' }} title="Afghanistan: 4.4%" />
             <div style={{ width: '3.1%', backgroundColor: '#8b5cf6' }} title="Malaysia: 3.1%" />
             <div style={{ width: '0.9%', backgroundColor: '#38bdf8' }} title="Nepal & Bhutan: 0.9%" />
             <div style={{ width: '0.7%', backgroundColor: '#ec4899' }} title="Sri Lanka: 0.7%" />
@@ -437,7 +437,7 @@ export const GeospatialMap: React.FC = () => {
                   onClick={() => handleCountryChange(c.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium font-mono transition-all ${
                     isCurrent
-                      ? 'bg-orange-500 text-slate-950 font-bold shadow-md shadow-orange-500/20'
+                      ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-500/25 ring-1 ring-sky-400/50'
                       : 'bg-slate-950/70 border border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white'
                   }`}
                 >
@@ -465,7 +465,7 @@ export const GeospatialMap: React.FC = () => {
                   onClick={() => handleZoneClick(z)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
                     isZoneActive
-                      ? 'bg-orange-500/20 border border-orange-500 text-orange-300 font-bold shadow-md shadow-orange-500/10'
+                      ? 'bg-blue-600/25 border border-sky-400 text-sky-200 font-bold shadow-md shadow-sky-500/20'
                       : 'bg-slate-900/60 border border-slate-800/80 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80'
                   }`}
                 >
@@ -500,9 +500,9 @@ export const GeospatialMap: React.FC = () => {
               step="1000"
               value={minEnergyFilter}
               onChange={(e) => setMinEnergyFilter(Number(e.target.value))}
-              className="w-36 sm:w-48 accent-orange-500"
+              className="w-36 sm:w-48 accent-sky-400"
             />
-            <span className="text-orange-400 font-bold min-w-[70px]">
+            <span className="text-sky-400 font-bold min-w-[70px]">
               {minEnergyFilter === 0 ? 'All MW' : `≥ ${minEnergyFilter.toLocaleString()} MW`}
             </span>
           </div>
@@ -511,7 +511,7 @@ export const GeospatialMap: React.FC = () => {
           <div className="flex items-center gap-4 text-xs">
             <div>
               <span className="text-slate-500 uppercase text-[10px] block">Active Cells:</span>
-              <span className="text-orange-400 font-bold">{zoneStats.totalCells.toLocaleString()}</span>
+              <span className="text-sky-400 font-bold">{zoneStats.totalCells.toLocaleString()}</span>
             </div>
             <span className="text-slate-700">|</span>
             <div>
@@ -569,18 +569,18 @@ export const GeospatialMap: React.FC = () => {
 
         {/* SELECTED ZONE INTELLIGENCE CARD (Top-Right Overlay) */}
         {selectedZone && (
-          <div className="absolute top-4 right-4 z-[400] w-84 max-w-[90vw] rounded-2xl border border-orange-500/40 bg-slate-950/95 p-4 shadow-2xl shadow-orange-500/20 backdrop-blur-md">
+          <div className="absolute top-4 right-4 z-[400] w-84 max-w-[90vw] rounded-2xl border border-sky-500/40 bg-slate-950/95 p-4 shadow-2xl shadow-sky-500/20 backdrop-blur-md">
             <div className="flex items-start justify-between pb-2.5 border-b border-slate-800 mb-3">
               <div>
                 <span className="text-[10px] font-mono text-slate-400 uppercase flex items-center gap-1">
-                  <Navigation className="h-3 w-3 text-orange-400" />
+                  <Navigation className="h-3 w-3 text-sky-400" />
                   National Fire Zone Focus
                 </span>
                 <h3 className="text-sm font-bold text-white flex items-center gap-1.5 mt-0.5">
                   <span>{selectedZone.flag}</span>
                   <span>{selectedZone.name}</span>
                 </h3>
-                <span className="text-[11px] text-orange-400 font-mono">{selectedZone.countryName}</span>
+                <span className="text-[11px] text-sky-400 font-mono">{selectedZone.countryName}</span>
               </div>
               <button
                 onClick={() => setSelectedZone(null)}
@@ -607,7 +607,7 @@ export const GeospatialMap: React.FC = () => {
 
               <div className="flex justify-between py-1 border-b border-slate-900">
                 <span className="text-slate-400">Centroid:</span>
-                <span className="text-orange-400 font-bold">{selectedZone.centroid[0]}°N, {selectedZone.centroid[1]}°E</span>
+                <span className="text-sky-400 font-bold">{selectedZone.centroid[0]}°N, {selectedZone.centroid[1]}°E</span>
               </div>
 
               <div className="flex justify-between py-1 border-b border-slate-900">
@@ -630,10 +630,10 @@ export const GeospatialMap: React.FC = () => {
 
         {/* Selected Cell Detail Card (when user clicks an individual hotspot dot) */}
         {selectedCell && !selectedZone && (
-          <div className="absolute top-4 right-4 z-[400] w-80 rounded-2xl border border-orange-500/40 bg-slate-950/95 p-4 shadow-2xl shadow-orange-500/20 backdrop-blur-md">
+          <div className="absolute top-4 right-4 z-[400] w-80 rounded-2xl border border-sky-500/40 bg-slate-950/95 p-4 shadow-2xl shadow-sky-500/20 backdrop-blur-md">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800 mb-3">
-              <span className="text-xs font-bold text-orange-400 flex items-center gap-1.5 font-mono">
-                <Flame className="h-4 w-4 text-orange-500 animate-pulse" />
+              <span className="text-xs font-bold text-sky-400 flex items-center gap-1.5 font-mono">
+                <Flame className="h-4 w-4 text-sky-400 animate-pulse" />
                 Cell Analysis (0.1° × 0.1°)
               </span>
               <button

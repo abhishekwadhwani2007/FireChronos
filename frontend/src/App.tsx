@@ -55,20 +55,15 @@ export function App() {
   const handleSelectDate = (date: string) => {
     setSelectedDate(date);
     setDayDetailLoading(true);
-    fetchDayDetail('asia', date)
+    const regionParam = selectedCountry === 'all' ? 'asia' : selectedCountry;
+    fetchDayDetail(regionParam, date)
       .then((res) => {
         setDayDetail(res);
         setDayDetailLoading(false);
       })
       .catch((err) => {
         console.error('Failed to load day detail:', err);
-        // Fallback to india region endpoint
-        fetchDayDetail('india', date)
-          .then((res) => {
-            setDayDetail(res);
-            setDayDetailLoading(false);
-          })
-          .catch(() => setDayDetailLoading(false));
+        setDayDetailLoading(false);
       });
   };
 
@@ -109,7 +104,7 @@ export function App() {
   const currentTabInfo = pageTitles[activeTab] || pageTitles.calendar;
 
   return (
-    <div className="min-h-screen bg-[#060913] text-slate-100 flex font-sans selection:bg-orange-500 selection:text-slate-950">
+    <div className="min-h-screen bg-[#060913] text-slate-100 flex font-sans selection:bg-blue-600 selection:text-white">
       {/* Sleek Aerospace Mission Control Sidebar */}
       <Sidebar
         activeTab={activeTab}
@@ -137,7 +132,7 @@ export function App() {
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-400">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400">
                   {currentTabInfo.title}
                 </span>
                 <span className="text-slate-600">/</span>
@@ -151,7 +146,7 @@ export function App() {
           {/* Quick Header Telemetry Badges */}
           <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono">
             {/* Active Country Filter Badge */}
-            <div className="flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-950/80 px-3 py-1 text-slate-300">
+            <div className="flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-slate-200">
               <span>{activeCountryMeta.flag}</span>
               <span className="font-bold">{activeCountryMeta.name}</span>
             </div>
@@ -163,8 +158,8 @@ export function App() {
             </div>
 
             {/* Total Authentic Record Count */}
-            <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-orange-500/20 bg-orange-500/10 px-3 py-1 text-orange-400 font-bold">
-              <Flame className="h-3 w-3" />
+            <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-sky-300 font-bold">
+              <Flame className="h-3 w-3 text-sky-400" />
               <span>{(calendarData?.summary.total_detections || 20935359).toLocaleString()} Fires</span>
             </div>
           </div>
@@ -210,7 +205,7 @@ export function App() {
         <footer className="mt-auto border-t border-slate-800/80 bg-slate-950 py-5 text-xs text-slate-400">
           <div className="mx-auto flex max-w-[1600px] flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-2">
-              <Flame className="h-4 w-4 text-orange-500" />
+              <Flame className="h-4 w-4 text-sky-400" />
               <span className="font-bold text-slate-300 font-mono">FIRECHRONOS</span>
               <span className="text-slate-400">— NASA Space Apps Challenge 2026</span>
             </div>
@@ -222,7 +217,7 @@ export function App() {
                 href="https://firms.modaps.eosdis.nasa.gov/"
                 target="_blank"
                 rel="noreferrer"
-                className="text-slate-400 hover:text-orange-400 transition-colors flex items-center gap-1"
+                className="text-slate-400 hover:text-sky-400 transition-colors flex items-center gap-1"
               >
                 NASA FIRMS Archive
                 <ExternalLink className="h-3 w-3" />

@@ -108,7 +108,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Brand Mission Header */}
         <div className="flex items-center justify-between border-b border-slate-800/80 p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 via-amber-500 to-red-600 shadow-lg shadow-orange-500/20 ring-1 ring-orange-400/40">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 via-sky-500 to-teal-400 shadow-lg shadow-blue-500/25 ring-1 ring-sky-400/40">
               <Flame className="h-6 w-6 text-white" />
             </div>
             <div>
@@ -117,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   FIRECHRONOS
                 </span>
               </div>
-              <p className="text-[10px] font-mono text-orange-400/90 tracking-tight">
+              <p className="text-[10px] font-mono text-sky-400 tracking-tight font-semibold">
                 NASA SPACE APPS 2026
               </p>
             </div>
@@ -169,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 }}
                 className={`group flex w-full items-center justify-between rounded-xl p-3 text-left transition-all ${
                   isActive
-                    ? 'bg-gradient-to-r from-orange-500/15 via-orange-500/10 to-transparent border-l-4 border-orange-500 text-white shadow-sm shadow-orange-500/5'
+                    ? 'bg-gradient-to-r from-blue-600/20 via-sky-500/10 to-transparent border-l-4 border-sky-400 text-white shadow-sm shadow-blue-500/10'
                     : 'text-slate-400 hover:bg-slate-900/60 hover:text-slate-200 border-l-4 border-transparent'
                 }`}
               >
@@ -177,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <div
                     className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
                       isActive
-                        ? 'bg-orange-500/20 text-orange-400 ring-1 ring-orange-500/30'
+                        ? 'bg-blue-600/30 text-sky-300 ring-1 ring-blue-500/40'
                         : 'bg-slate-900 text-slate-400 group-hover:bg-slate-800 group-hover:text-slate-200'
                     }`}
                   >
@@ -195,7 +195,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                 <span
                   className={`text-[9px] font-mono px-1.5 py-0.5 rounded border font-semibold shrink-0 ${
-                    isActive ? 'border-orange-500/30 text-orange-400 bg-orange-500/10' : item.badgeColor
+                    isActive ? 'border-sky-500/40 text-sky-300 bg-blue-500/20' : item.badgeColor
                   }`}
                 >
                   {item.badge}
@@ -208,7 +208,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="pt-4 px-3">
             <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold mb-2">
               <span className="flex items-center gap-1">
-                <Globe2 className="h-3 w-3 text-orange-400" />
+                <Globe2 className="h-3 w-3 text-sky-400" />
                 Active Asian Domain
               </span>
               <span className="text-slate-400 font-normal">9 Nations</span>
@@ -223,7 +223,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => setSelectedCountry(c.id)}
                     className={`flex items-center gap-1.5 p-1.5 rounded-lg border text-left text-[11px] font-mono transition-all ${
                       isSelected
-                        ? 'border-orange-500/60 bg-orange-500/15 text-white font-bold'
+                        ? 'border-sky-500/60 bg-blue-600/20 text-white font-bold shadow-sm shadow-blue-500/10'
                         : 'border-slate-800/80 bg-slate-950/40 text-slate-400 hover:border-slate-700 hover:text-slate-200'
                     }`}
                   >
