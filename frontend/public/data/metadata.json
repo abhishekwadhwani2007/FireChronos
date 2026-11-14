@@ -1,0 +1,24 @@
+{
+  "project": "FIRECHRONOS",
+  "challenge": "NASA Space Apps 2026 - Harmonization of MODIS and VIIRS Hot Spots",
+  "region_name": "Pan-Asian Transboundary Fire Belt (India, Pakistan, Afghan, E. Iran, China, Malaysia, etc.)",
+  "bounding_box": [
+    52.1,
+    4.7,
+    109.9,
+    40.9
+  ],
+  "total_authentic_observations": 20935359,
+  "sensor_breakdown": {
+    "MODIS_C61_Terra_Aqua": 2037241,
+    "VIIRS_NOAA20_JPSS1": 12526224,
+    "VIIRS_NOAA21_JPSS2": 6371894
+  },
+  "temporal_range": {
+    "start_date": "2020-01-01",
+    "end_date": "2026-11-13",
+    "calendar_days": 2509
+  },
+  "resolution_scaling_factor": 6.91,
+  "updated_at": "2026-11-14T14:36:35.412043"
+}
