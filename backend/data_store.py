@@ -8,8 +8,21 @@ import json
 import sqlite3
 from pathlib import Path
 
-BASE    = Path(__file__).resolve().parent.parent / "data" / "processed"
-MODELS  = Path(__file__).resolve().parent.parent / "models"
+BASE = Path(__file__).resolve().parent.parent / "data" / "processed"
+if not BASE.exists():
+    alt = Path.cwd() / "data" / "processed"
+    if alt.exists():
+        BASE = alt
+    else:
+        alt2 = Path(__file__).resolve().parent / "data" / "processed"
+        if alt2.exists():
+            BASE = alt2
+
+MODELS = Path(__file__).resolve().parent.parent / "models"
+if not MODELS.exists():
+    alt_m = Path.cwd() / "models"
+    if alt_m.exists():
+        MODELS = alt_m
 
 _calendar: list[dict] = []
 _calendar_by_date: dict[str, dict] = {}
