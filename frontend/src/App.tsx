@@ -7,6 +7,7 @@ import { GeospatialMap } from './components/GeospatialMap';
 import { DataCenter } from './components/DataCenter';
 import { DayDetailModal } from './components/DayDetailModal';
 import { ForecastPanel } from './components/ForecastPanel';
+import { CinematicLanding } from './components/CinematicLanding';
 import { fetchCalendar, fetchDayDetail } from './api';
 import { CalendarResponse, DayDetail } from './types';
 import { COUNTRIES } from './data/countryZones';
@@ -23,6 +24,9 @@ import {
 } from 'lucide-react';
 
 export function App() {
+  const [isEntered, setIsEntered] = useState<boolean>(() => {
+    return typeof window !== 'undefined' && window.location.hash === '#main';
+  });
   const [activeTab, setActiveTab] = useState<string>('calendar');
   const [mode, setMode] = useState<'harmonized' | 'viirs' | 'modis'>('harmonized');
   const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
@@ -35,6 +39,24 @@ export function App() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [dayDetail, setDayDetail] = useState<DayDetail | null>(null);
   const [dayDetailLoading, setDayDetailLoading] = useState<boolean>(false);
+
+  // Sync hash state
+  useEffect(() => {
+    const handleHash = () => {
+      setIsEntered(window.location.hash === '#main');
+    };
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  const handleReturnToLanding = () => {
+    try {
+      window.history.replaceState(null, '', window.location.pathname);
+    } catch {
+      window.location.hash = '';
+    }
+    setIsEntered(false);
+  };
 
   // Load calendar when mode or country changes
   useEffect(() => {
@@ -103,6 +125,21 @@ export function App() {
 
   const currentTabInfo = pageTitles[activeTab] || pageTitles.calendar;
 
+  if (!isEntered) {
+    return (
+      <CinematicLanding
+        onEnter={() => {
+          try {
+            window.history.replaceState(null, '', '#main');
+          } catch {
+            window.location.hash = '#main';
+          }
+          setIsEntered(true);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#060913] text-slate-100 flex font-sans selection:bg-blue-600 selection:text-white">
       {/* Sleek Aerospace Mission Control Sidebar */}
@@ -114,6 +151,7 @@ export function App() {
         totalDetections={calendarData?.summary.total_detections || 20935359}
         mobileOpen={mobileOpen}
         setMobileOpen={setMobileOpen}
+        onReturnToLanding={handleReturnToLanding}
       />
 
       {/* Main Content Area */}
@@ -162,6 +200,16 @@ export function App() {
               <Flame className="h-3 w-3 text-sky-400" />
               <span>{(calendarData?.summary.total_detections || 20935359).toLocaleString()} Fires</span>
             </div>
+
+            {/* Return to Cinematic View */}
+            <button
+              onClick={handleReturnToLanding}
+              className="flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-900/90 px-3 py-1 text-slate-300 hover:text-white hover:border-sky-500/50 hover:bg-slate-800 transition-all font-semibold"
+              title="Return to Earth Rising Landing View"
+            >
+              <Globe2 className="h-3 w-3 text-sky-400" />
+              <span className="hidden sm:inline">Earth View</span>
+            </button>
           </div>
         </header>
 

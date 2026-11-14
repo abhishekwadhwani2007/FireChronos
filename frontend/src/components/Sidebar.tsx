@@ -27,6 +27,7 @@ interface SidebarProps {
   totalDetections?: number;
   mobileOpen: boolean;
   setMobileOpen: (open: boolean) => void;
+  onReturnToLanding?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -37,6 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   totalDetections = 20935359,
   mobileOpen,
   setMobileOpen,
+  onReturnToLanding,
 }) => {
   const navItems = [
     {
@@ -107,13 +109,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         {/* Brand Mission Header */}
         <div className="flex items-center justify-between border-b border-slate-800/80 p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 via-sky-500 to-teal-400 shadow-lg shadow-blue-500/25 ring-1 ring-sky-400/40">
+          <button
+            onClick={onReturnToLanding}
+            className="flex items-center gap-3 text-left group transition-all"
+            title="Return to Earth Rising Landing View"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 via-sky-500 to-teal-400 shadow-lg shadow-blue-500/25 ring-1 ring-sky-400/40 group-hover:scale-105 transition-transform">
               <Flame className="h-6 w-6 text-white" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-extrabold tracking-wider text-white text-base font-sans">
+                <span className="font-extrabold tracking-wider text-white text-base font-sans group-hover:text-sky-300 transition-colors">
                   FIRECHRONOS
                 </span>
               </div>
@@ -121,7 +127,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 NASA SPACE APPS 2026
               </p>
             </div>
-          </div>
+          </button>
 
           <button
             onClick={() => setMobileOpen(false)}
@@ -203,6 +209,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </button>
             );
           })}
+
+          {/* Return to Cinematic Landing Button */}
+          {onReturnToLanding && (
+            <button
+              onClick={onReturnToLanding}
+              className="mt-2 flex w-full items-center justify-between rounded-xl border border-slate-800/80 bg-slate-950/40 px-3 py-2.5 text-xs font-mono text-slate-400 transition-all hover:border-sky-500/40 hover:bg-slate-900 hover:text-white group"
+              title="Return to Earth Rising Landing View"
+            >
+              <span className="flex items-center gap-2">
+                <Globe2 className="h-4 w-4 text-sky-400 group-hover:rotate-12 transition-transform" />
+                <span className="font-semibold">Cinematic Landing</span>
+              </span>
+              <ChevronRight className="h-3.5 w-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          )}
 
           {/* Quick Country Domain Selector */}
           <div className="pt-4 px-3">
