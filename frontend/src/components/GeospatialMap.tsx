@@ -398,12 +398,12 @@ export const GeospatialMap: React.FC = () => {
           </div>
         </div>
 
-        {/* COUNTRY SELECTOR STRIP */}
+        {/* COUNTRY SELECTOR STRIP & REGIONAL DISTRIBUTION */}
         <div className="mt-6 pt-5 border-t border-slate-800/80">
           <div className="flex items-center justify-between gap-2 mb-2.5">
             <span className="text-xs font-mono text-slate-400 uppercase font-semibold flex items-center gap-1.5">
               <Compass className="h-3.5 w-3.5 text-orange-400" />
-              Select Country Domain:
+              Pan-Asian Country Domains & Fire Share:
             </span>
             {selectedZone && (
               <button
@@ -415,6 +415,19 @@ export const GeospatialMap: React.FC = () => {
               </button>
             )}
           </div>
+
+          {/* Regional Fire Distribution Bar */}
+          <div className="h-2 w-full rounded-full bg-slate-950 flex overflow-hidden border border-slate-800 mb-3 shadow-inner">
+            <div style={{ width: '41.9%', backgroundColor: '#f97316' }} title="India: 41.9%" />
+            <div style={{ width: '35.2%', backgroundColor: '#ef4444' }} title="China: 35.2%" />
+            <div style={{ width: '8.0%', backgroundColor: '#10b981' }} title="Pakistan: 8.0%" />
+            <div style={{ width: '5.8%', backgroundColor: '#f59e0b' }} title="Eastern Iran: 5.8%" />
+            <div style={{ width: '4.4%', backgroundColor: '#06b6d4' }} title="Afghanistan: 4.4%" />
+            <div style={{ width: '3.1%', backgroundColor: '#8b5cf6' }} title="Malaysia: 3.1%" />
+            <div style={{ width: '0.9%', backgroundColor: '#38bdf8' }} title="Nepal & Bhutan: 0.9%" />
+            <div style={{ width: '0.7%', backgroundColor: '#ec4899' }} title="Sri Lanka: 0.7%" />
+          </div>
+
           <div className="flex flex-wrap gap-2">
             {COUNTRIES.map((c) => {
               const isCurrent = selectedCountry === c.id;

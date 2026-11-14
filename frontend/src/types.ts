@@ -1,4 +1,22 @@
-﻿export interface DayRecord {
+﻿export interface CountryDistributionItem {
+  id: string;
+  name: string;
+  flag: string;
+  share_percentage: number;
+  total_detections: number;
+  total_frp_mw: number;
+  peak_season: string;
+  primary_driver: string;
+}
+
+export interface RegionalDistributionResponse {
+  domain: string;
+  total_detections: number;
+  total_frp_mw: number;
+  countries: CountryDistributionItem[];
+}
+
+export interface DayRecord {
   date: string;
   year: number;
   month: number;

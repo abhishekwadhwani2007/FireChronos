@@ -1,6 +1,18 @@
 ﻿import React, { useState, useMemo } from 'react';
 import { DayRecord, CalendarResponse } from '../types';
-import { Calendar as CalendarIcon, Flame, AlertTriangle, Filter, Sparkles, Info } from 'lucide-react';
+import { COUNTRIES, CountryMeta } from '../data/countryZones';
+import {
+  Calendar as CalendarIcon,
+  Flame,
+  AlertTriangle,
+  Filter,
+  Sparkles,
+  Info,
+  Globe2,
+  TrendingUp,
+  MapPin,
+  ChevronDown
+} from 'lucide-react';
 
 interface CalendarViewProps {
   data: CalendarResponse | null;
@@ -9,6 +21,8 @@ interface CalendarViewProps {
   setMode: (mode: 'harmonized' | 'viirs' | 'modis') => void;
   selectedYear: number | 'all';
   setSelectedYear: (year: number | 'all') => void;
+  selectedCountry: string;
+  setSelectedCountry: (countryId: string) => void;
   onSelectDate: (date: string) => void;
 }
 
@@ -24,12 +38,30 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   setMode,
   selectedYear,
   setSelectedYear,
+  selectedCountry,
+  setSelectedCountry,
   onSelectDate,
 }) => {
   const [anomalyFilter, setAnomalyFilter] = useState<'ALL' | 'HIGH' | 'ELEVATED' | 'NORMAL' | 'LOW'>('ALL');
   const [hoveredDay, setHoveredDay] = useState<DayRecord | null>(null);
+  const [showRegionalPanel, setShowRegionalPanel] = useState<boolean>(true);
 
   const availableYears = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+
+  const regionalShares = [
+    { id: 'india', name: 'India', flag: '🇮🇳', share: 41.9, color: '#f97316', peak: 'Oct–Nov & Mar–May', driver: 'Indo-Gangetic stubble & Central deciduous forests' },
+    { id: 'china', name: 'China', flag: '🇨🇳', share: 35.2, color: '#ef4444', peak: 'May–Jun & Oct–Nov', driver: 'Yangtze agricultural basin & southern subtropical clearing' },
+    { id: 'pakistan', name: 'Pakistan', flag: '🇵🇰', share: 8.0, color: '#10b981', peak: 'Oct–Dec', driver: 'Punjab & Sindh canal colony rice-wheat stubble' },
+    { id: 'iran', name: 'Eastern Iran', flag: '🇮🇷', share: 5.8, color: '#f59e0b', peak: 'Jul–Sep', driver: 'Sistan basin wetland reeds & rangeland scrub' },
+    { id: 'afghanistan', name: 'Afghanistan', flag: '🇦🇫', share: 4.4, color: '#06b6d4', peak: 'Jun–Aug', driver: 'Helmand river oasis & Amu Darya irrigated field burns' },
+    { id: 'malaysia', name: 'Malaysia', flag: '🇲🇾', share: 3.1, color: '#8b5cf6', peak: 'Feb–Mar & Jul–Sep', driver: 'Tropical peatland smoldering & coastal oil palm field clearing' },
+    { id: 'nepal_bhutan', name: 'Nepal & Bhutan', flag: '🇳🇵', share: 0.9, color: '#38bdf8', peak: 'Mar–May', driver: 'Terai agricultural burning & foothills dry understory' },
+    { id: 'srilanka', name: 'Sri Lanka', flag: '🇱🇰', share: 0.7, color: '#ec4899', peak: 'Jul–Sep', driver: 'Dry Zone Chena rotational slash-and-burn' },
+  ];
+
+  const currentCountryMeta = useMemo(() => {
+    return regionalShares.find((r) => r.id === selectedCountry);
+  }, [selectedCountry]);
 
   // Filter days by year and anomaly
   const filteredDays = useMemo(() => {
@@ -100,18 +132,18 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400 border border-orange-500/20">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400 border border-orange-500/20 font-mono">
                 <Flame className="h-3.5 w-3.5 text-orange-500" />
-                CENTRAL PRODUCT EXPERIENCE
+                TRANSTERRITORIAL FIRE INTELLIGENCE
               </span>
-              <span className="text-xs text-slate-400">• Click any day for NASA hotspot drilldown</span>
+              <span className="text-xs text-slate-400">• Click any day for satellite drilldown</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
               Harmonized Burning Activity Calendar
             </h1>
             <p className="mt-1 text-sm text-slate-300 max-w-2xl">
-              Standardized temporal-spatial framework unifying MODIS C6.1 (1 km) and VIIRS (375 m) observations
-              into a consistent, anomaly-aware burning history across India (2020–2026).
+              Transboundary temporal-spatial framework unifying MODIS C6.1 (1 km) and VIIRS N20/N21 (375 m) observations
+              into a consistent, anomaly-aware burning history across 9 Asian nations (2020–2026).
             </p>
           </div>
 
@@ -154,6 +186,98 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               </button>
             </div>
           </div>
+        </div>
+
+        {/* REGION-WISE DISTRIBUTION BAR & COUNTRY SELECTOR */}
+        <div className="mt-6 pt-5 border-t border-slate-800/80">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+            <div className="flex items-center gap-2">
+              <Globe2 className="h-4 w-4 text-orange-400" />
+              <span className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                Pan-Asian Regional Fire Distribution
+              </span>
+              <span className="text-[11px] text-slate-400 font-mono">
+                • 20.9M Authentic Detections
+              </span>
+            </div>
+            <button
+              onClick={() => setShowRegionalPanel(!showRegionalPanel)}
+              className="text-xs font-mono text-slate-400 hover:text-orange-400 transition-colors flex items-center gap-1 self-start sm:self-auto"
+            >
+              {showRegionalPanel ? 'Compact View' : 'Show Regional Drivers'}
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${showRegionalPanel ? 'rotate-180' : ''}`} />
+            </button>
+          </div>
+
+          {/* Visual Stacked Distribution Bar */}
+          <div className="h-3 w-full rounded-full bg-slate-950 flex overflow-hidden border border-slate-800 mb-3 shadow-inner">
+            {regionalShares.map((r) => (
+              <div
+                key={r.id}
+                title={`${r.name}: ${r.share}% of Asian burning`}
+                style={{ width: `${r.share}%`, backgroundColor: r.color }}
+                className="h-full transition-all hover:brightness-125 cursor-pointer"
+                onClick={() => setSelectedCountry(r.id)}
+              />
+            ))}
+          </div>
+
+          {/* Country Selection Chips */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => setSelectedCountry('all')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all ${
+                selectedCountry === 'all'
+                  ? 'border-orange-500 bg-orange-500/20 text-white font-bold shadow-sm shadow-orange-500/20'
+                  : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+              }`}
+            >
+              <span>🌏</span>
+              <span>All Asia (100%)</span>
+            </button>
+
+            {regionalShares.map((r) => {
+              const isSelected = selectedCountry === r.id;
+              return (
+                <button
+                  key={r.id}
+                  onClick={() => setSelectedCountry(r.id)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-mono transition-all ${
+                    isSelected
+                      ? 'border-orange-500 bg-orange-500/20 text-white font-bold shadow-sm shadow-orange-500/20 ring-1 ring-orange-500/40'
+                      : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                  }`}
+                >
+                  <span>{r.flag}</span>
+                  <span>{r.name}</span>
+                  <span className="text-[10px] text-slate-400 font-bold">({r.share}%)</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Active Country Intelligence Strip */}
+          {selectedCountry !== 'all' && currentCountryMeta && (
+            <div className="mt-3 p-3 rounded-xl border border-orange-500/30 bg-orange-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono text-xs">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xl">{currentCountryMeta.flag}</span>
+                <div>
+                  <span className="text-white font-bold">{currentCountryMeta.name} Ecological Fire Domain</span>
+                  <p className="text-[11px] text-slate-300 font-sans mt-0.5">{currentCountryMeta.driver}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 text-[11px] shrink-0 text-slate-300">
+                <div>
+                  <span className="text-slate-400 block text-[10px] uppercase">Peak Burning Season</span>
+                  <span className="text-orange-400 font-bold">{currentCountryMeta.peak}</span>
+                </div>
+                <div className="border-l border-slate-700 pl-4">
+                  <span className="text-slate-400 block text-[10px] uppercase">Domain Share</span>
+                  <span className="text-white font-bold">{currentCountryMeta.share}%</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Metrics Summary Strip */}

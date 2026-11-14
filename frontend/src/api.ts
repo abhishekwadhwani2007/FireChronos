@@ -7,6 +7,7 @@
   MetaSourcesResponse,
   ForecastResponse,
   ModelAccuracyResponse,
+  RegionalDistributionResponse,
 } from './types';
 
 const API_BASE = '/api';
@@ -75,5 +76,11 @@ export async function fetchForecast(region = 'asia'): Promise<ForecastResponse> 
 export async function fetchModelAccuracy(region = 'asia'): Promise<ModelAccuracyResponse> {
   const res = await fetch(`${API_BASE}/regions/${region}/model-accuracy`);
   if (!res.ok) throw new Error(`Model Accuracy API error: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchRegionalDistribution(): Promise<RegionalDistributionResponse> {
+  const res = await fetch(`${API_BASE}/regions/asia/distribution`);
+  if (!res.ok) throw new Error(`Regional Distribution API error: ${res.statusText}`);
   return res.json();
 }

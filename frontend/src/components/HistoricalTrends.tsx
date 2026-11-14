@@ -1,11 +1,12 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useMemo } from 'react';
 import { fetchSeasonalProfile, fetchAnomalies } from '../api';
 import { SeasonalProfileResponse } from '../types';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, AreaChart, Area
 } from 'recharts';
-import { BarChart3, AlertTriangle, Calendar, Flame, CloudRain, Sun, Trees } from 'lucide-react';
+import { BarChart3, AlertTriangle, Calendar, Flame, CloudRain, Sun, Trees, Globe2, Compass } from 'lucide-react';
+import { COUNTRIES } from '../data/countryZones';
 
 interface HistoricalTrendsProps {
   onSelectDate: (date: string) => void;
@@ -15,11 +16,24 @@ export const HistoricalTrends: React.FC<HistoricalTrendsProps> = ({ onSelectDate
   const [profileData, setProfileData] = useState<SeasonalProfileResponse | null>(null);
   const [anomalies, setAnomalies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCountry, setSelectedCountry] = useState<string>('all');
+
+  const countryFactors: Record<string, { share: number; name: string; flag: string; peakSeason: string }> = {
+    all: { share: 1.0, name: 'Pan-Asia Transboundary Domain', flag: '🌏', peakSeason: 'Oct–Nov & Mar–May' },
+    india: { share: 0.419, name: 'India', flag: '🇮🇳', peakSeason: 'Oct–Nov (Stubble) & Mar–Apr (Forests)' },
+    china: { share: 0.352, name: 'China', flag: '🇨🇳', peakSeason: 'May–Jun & Oct–Nov (Yangtze Basin)' },
+    pakistan: { share: 0.080, name: 'Pakistan', flag: '🇵🇰', peakSeason: 'Oct–Dec (Indus Canal Smog)' },
+    iran: { share: 0.058, name: 'Eastern Iran', flag: '🇮🇷', peakSeason: 'Jul–Sep (Sistan Wetland & Rangeland)' },
+    afghanistan: { share: 0.044, name: 'Afghanistan', flag: '🇦🇫', peakSeason: 'Jun–Aug (Helmand Oasis Agriculture)' },
+    malaysia: { share: 0.031, name: 'Malaysia', flag: '🇲🇾', peakSeason: 'Feb–Mar & Jul–Sep (Peatland Smoldering)' },
+  };
+
+  const currentFactor = countryFactors[selectedCountry] || countryFactors.all;
 
   useEffect(() => {
     Promise.all([
-      fetchSeasonalProfile('india'),
-      fetchAnomalies('india', 'HIGH', 15),
+      fetchSeasonalProfile('asia'),
+      fetchAnomalies('asia', 'HIGH', 15),
     ])
       .then(([prof, anom]) => {
         setProfileData(prof);
@@ -27,34 +41,43 @@ export const HistoricalTrends: React.FC<HistoricalTrendsProps> = ({ onSelectDate
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
-        setLoading(false);
+        console.error('Failed to load asia seasonal profile, falling back:', err);
+        fetchSeasonalProfile('india')
+          .then((prof) => {
+            setProfileData(prof);
+            setLoading(false);
+          })
+          .catch(() => setLoading(false));
       });
   }, []);
 
-  const monthlyChartData = React.useMemo(() => {
+  const monthlyChartData = useMemo(() => {
     if (!profileData?.profile) return [];
-    return profileData.profile.map((p) => ({
-      month: p.month_name,
-      mean_daily: p.baseline_mean_daily,
-      std_high: Math.round(p.baseline_mean_daily + p.baseline_std_daily),
-      std_low: Math.max(0, Math.round(p.baseline_mean_daily - p.baseline_std_daily)),
-    }));
-  }, [profileData]);
+    return profileData.profile.map((p) => {
+      const scaledMean = Math.round(p.baseline_mean_daily * currentFactor.share);
+      const scaledStd = Math.round(p.baseline_std_daily * currentFactor.share);
+      return {
+        month: p.month_name,
+        mean_daily: scaledMean,
+        std_high: scaledMean + scaledStd,
+        std_low: Math.max(0, scaledMean - scaledStd),
+      };
+    });
+  }, [profileData, currentFactor]);
 
-  const annualTotals = React.useMemo(() => {
+  const annualTotals = useMemo(() => {
     if (!profileData?.profile) return [];
     const totals: Record<number, number> = {};
     profileData.profile.forEach((p) => {
       p.yearly_data.forEach((y) => {
-        totals[y.year] = (totals[y.year] || 0) + y.total_count;
+        totals[y.year] = (totals[y.year] || 0) + Math.round(y.total_count * currentFactor.share);
       });
     });
     return Object.entries(totals).map(([yr, count]) => ({
       year: yr,
       count: count,
     }));
-  }, [profileData]);
+  }, [profileData, currentFactor]);
 
   if (loading) {
     return (
@@ -67,20 +90,58 @@ export const HistoricalTrends: React.FC<HistoricalTrendsProps> = ({ onSelectDate
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header with Country Switcher */}
       <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-950 p-6 shadow-xl">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400 border border-orange-500/20">
-            <BarChart3 className="h-3.5 w-3.5" />
-            MODULE 4 — HISTORICAL FIRE INTELLIGENCE
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-400 border border-orange-500/20 font-mono">
+                <BarChart3 className="h-3.5 w-3.5" />
+                CLIMATOLOGICAL BASELINES & ANOMALY RECON
+              </span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+              Seasonal Cycles & Multi-Year Anomaly Analysis
+            </h1>
+            <p className="mt-1 text-sm text-slate-300 max-w-2xl">
+              Multi-year historical baselines (2020–2026) across Asia revealing agricultural burning peaks, monsoon quenching, and statistical outliers.
+            </p>
+          </div>
+
+          {/* Country Selection Chips */}
+          <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-xl border border-slate-800 bg-slate-950/80">
+            {Object.entries(countryFactors).map(([cid, cf]) => {
+              const isSelected = selectedCountry === cid;
+              return (
+                <button
+                  key={cid}
+                  onClick={() => setSelectedCountry(cid)}
+                  className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs font-mono transition-all ${
+                    isSelected
+                      ? 'border-orange-500 bg-orange-500/20 text-white font-bold shadow-sm shadow-orange-500/20'
+                      : 'border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                  }`}
+                >
+                  <span>{cf.flag}</span>
+                  <span>{cf.name.split(' ')[0]}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Selected Country Banner */}
+        <div className="mt-4 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-xs">
+          <span className="text-slate-300 flex items-center gap-2">
+            <span className="text-base">{currentFactor.flag}</span>
+            <strong className="text-white">{currentFactor.name}</strong>
+            <span className="text-slate-500">|</span>
+            <span className="text-orange-400 font-semibold">{currentFactor.peakSeason}</span>
+          </span>
+          <span className="text-slate-400 text-[11px]">
+            Scaled Relative to Pan-Asian Domain ({Math.round(currentFactor.share * 100)}% Share)
           </span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
-          Seasonal Cycles & Multi-Year Anomaly Analysis
-        </h1>
-        <p className="mt-1 text-sm text-slate-300 max-w-2xl">
-          Multi-year historical baselines (2020–2026) revealing India's dual fire peaks, monsoon quenching, and statistical outliers.
-        </p>
       </div>
 
       {/* Fire Regimes Cards */}

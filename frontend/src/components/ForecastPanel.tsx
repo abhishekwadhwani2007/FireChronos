@@ -9,7 +9,8 @@ import {
   Sparkles,
   Navigation,
   Activity,
-  Flame
+  Flame,
+  Globe
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -330,13 +331,44 @@ export const ForecastPanel: React.FC = () => {
                 </h3>
               </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Geographic distribution of projected wildfire and agricultural burning activity across Asia's 6 key ecologies.
+                Dynamic daily shift of active fire corridors across Asia based on synoptic frontal movements and agricultural schedules.
               </p>
             </div>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-800/80 px-3 py-1 text-xs text-slate-300 border border-slate-700/60 font-mono">
-              <Navigation className="h-3.5 w-3.5 text-orange-400" />
-              Thermal Center: {selectedDay.center_of_mass ? `${selectedDay.center_of_mass[0]}°N, ${selectedDay.center_of_mass[1]}°E` : '25.4°N, 82.6°E'}
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs text-orange-400 border border-orange-500/20 font-mono font-bold">
+                <Sparkles className="h-3.5 w-3.5" />
+                {selectedDay.dominant_corridor}
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-800/80 px-3 py-1 text-xs text-slate-300 border border-slate-700/60 font-mono">
+                <Navigation className="h-3.5 w-3.5 text-orange-400" />
+                Center: {selectedDay.center_of_mass ? `${selectedDay.center_of_mass[0]}°N, ${selectedDay.center_of_mass[1]}°E` : '25.4°N, 82.6°E'}
+              </span>
+            </div>
+          </div>
+
+          {/* Dynamic Daily Corridor Share Bar */}
+          <div className="mb-5 rounded-xl border border-slate-800 bg-slate-950/80 p-3.5">
+            <div className="flex items-center justify-between text-xs font-mono mb-2">
+              <span className="text-slate-300 font-semibold flex items-center gap-1.5">
+                <Globe className="h-3.5 w-3.5 text-orange-400" />
+                Day +{selectedDay.day_offset} Corridor Proportion Distribution
+              </span>
+              <span className="text-slate-400 text-[11px]">100% Normalized</span>
+            </div>
+            <div className="h-2.5 w-full rounded-full bg-slate-900 flex overflow-hidden border border-slate-800">
+              {selectedDay.corridors.map((c, i) => {
+                const colors = ['#f97316', '#ef4444', '#10b981', '#06b6d4', '#f59e0b', '#8b5cf6'];
+                return (
+                  <div
+                    key={c.id}
+                    title={`${c.name}: ${c.share_percentage}%`}
+                    style={{ width: `${c.share_percentage}%`, backgroundColor: colors[i % colors.length] }}
+                    className="h-full hover:brightness-125 transition-all cursor-pointer"
+                    onClick={() => setSelectedCorridor(c)}
+                  />
+                );
+              })}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
