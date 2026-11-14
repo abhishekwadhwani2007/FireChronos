@@ -11,6 +11,11 @@
   DayRecord,
 } from './types';
 
+import staticForecast from '../../data/processed/forecast_7day.json';
+import staticGrid from '../../data/processed/india_grid_top_hotspots.json';
+import staticMetadata from '../../data/processed/metadata.json';
+import staticBaseline from '../../data/processed/india_monthly_baseline.json';
+
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 const COUNTRY_FACTORS: Record<string, { share: number; name: string; flag: string }> = {
@@ -29,13 +34,11 @@ let cachedCalendar: any[] | null = null;
 async function getFallbackCalendar(): Promise<any[]> {
   if (cachedCalendar && cachedCalendar.length > 0) return cachedCalendar;
   try {
-    const res = await fetch('/data/india_daily_calendar.json');
-    if (res.ok) {
-      cachedCalendar = await res.json();
-      return cachedCalendar || [];
-    }
+    const mod = await import('../../data/processed/india_daily_calendar.json');
+    cachedCalendar = (mod.default || mod) as any[];
+    return cachedCalendar || [];
   } catch (err) {
-    console.warn('[Fallback API] Local calendar JSON fetch error:', err);
+    console.warn('[Fallback API] Local calendar JSON chunk load error:', err);
   }
   return [];
 }
@@ -265,29 +268,15 @@ export async function fetchGrid(region = 'asia', limit = 2000): Promise<GridResp
     const res = await fetch(`${API_BASE}/regions/${region}/grid?limit=${limit}`);
     if (res.ok) return await res.json();
   } catch (err) {
-    console.warn('[API] Grid fetch fallback to /data/india_grid_top_hotspots.json');
+    console.warn('[API] Grid fetch fallback to bundled staticGrid');
   }
 
-  try {
-    const res = await fetch('/data/india_grid_top_hotspots.json');
-    if (res.ok) {
-      const cells = await res.json();
-      return {
-        region_id: region,
-        spatial_framework: '0.1° x 0.1° (~11 km) WGS84 Equal-Area Grid',
-        total_cells: cells.length,
-        cells: cells.slice(0, limit),
-      };
-    }
-  } catch (e) {
-    console.warn('[Fallback API] Grid JSON error:', e);
-  }
-
+  const cells = (staticGrid as any[]) || [];
   return {
     region_id: region,
     spatial_framework: '0.1° x 0.1° (~11 km) WGS84 Equal-Area Grid',
-    total_cells: 0,
-    cells: [],
+    total_cells: cells.length,
+    cells: cells.slice(0, limit),
   };
 }
 
@@ -296,12 +285,13 @@ export async function fetchMetaSources(): Promise<MetaSourcesResponse> {
     const res = await fetch(`${API_BASE}/meta/sources`);
     if (res.ok) return await res.json();
   } catch (err) {
-    console.warn('[API] Meta sources fallback to /data/metadata.json');
+    console.warn('[API] Meta sources fallback to bundled staticMetadata');
   }
 
+  const meta = (staticMetadata as any) || {};
   return {
-    project: 'FIRECHRONOS',
-    challenge: 'NASA Space Apps Challenge 2026',
+    project: meta.project || 'FIRECHRONOS',
+    challenge: meta.event || 'NASA Space Apps Challenge 2026',
     data_sources: [
       { sensor: 'MODIS Terra/Aqua', satellite: 'Terra & Aqua', resolution: '1000m', source: 'NASA LANCE / FIRMS', citation: 'Giglio et al. 2016' },
       { sensor: 'VIIRS S-NPP', satellite: 'Suomi-NPP', resolution: '375m', source: 'NASA LANCE / FIRMS', citation: 'Schroeder et al. 2014' },
@@ -335,16 +325,11 @@ export async function fetchForecast(region = 'asia'): Promise<ForecastResponse> 
     const res = await fetch(`${API_BASE}/regions/${region}/forecast`);
     if (res.ok) return await res.json();
   } catch (err) {
-    console.warn('[API] Forecast fetch fallback to /data/forecast_7day.json');
+    console.warn('[API] Forecast fetch fallback to bundled staticForecast');
   }
 
-  try {
-    const res = await fetch('/data/forecast_7day.json');
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (e) {
-    console.warn('[Fallback API] Forecast JSON error:', e);
+  if (staticForecast && (staticForecast as any).forecasts) {
+    return staticForecast as unknown as ForecastResponse;
   }
 
   return {

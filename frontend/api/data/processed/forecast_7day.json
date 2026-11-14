@@ -1,0 +1,1664 @@
+{
+  "generated_at": "2026-11-14T16:21:22.469180",
+  "anchor_date": "2026-11-06",
+  "region_id": "asia",
+  "forecast_horizon_days": 7,
+  "model_metadata": {
+    "architecture": "Dual-Head Multi-Sensor Ensemble (XGBoost + HistGradientBoosting)",
+    "regression_mae": 1.5,
+    "regression_r2": 0.953,
+    "classifier_roc_auc": 0.868,
+    "classifier_high_precision": 0.655,
+    "classifier_accuracy": 0.893,
+    "validation_strategy": "Out-of-sample holdout (494 days)",
+    "sensor_foundation": "NASA FIRMS Authentic Multi-Sensor (MODIS C6.1 + VIIRS NOAA-20 + VIIRS NOAA-21)"
+  },
+  "forecasts": [
+    {
+      "date": "2026-11-07",
+      "day_offset": 1,
+      "day_of_week": "Saturday",
+      "predicted_hai": 7.4,
+      "confidence_interval_low": 4.9,
+      "confidence_interval_high": 9.8,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 12.3,
+      "total_estimated_hotspots": 3421,
+      "dominant_corridor": "Indo-Gangetic Residue Plains (44.0% of pan-Asian burning)",
+      "center_of_mass": [
+        25.4,
+        82.6
+      ],
+      "corridors": [
+        {
+          "id": "indo_gangetic",
+          "name": "Indo-Gangetic Residue Plains",
+          "countries": [
+            "India",
+            "Pakistan"
+          ],
+          "centroid": [
+            30.5,
+            75.8
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 44.0,
+          "predicted_hotspots": 1505,
+          "predicted_frp_mw": 9727.4,
+          "primary_driver": "Post-monsoon rice stubble burning & agricultural field preparation",
+          "key_zones": [
+            "Punjab (Bathinda, Sangrur, Ludhiana)",
+            "Haryana (Kaithal, Karnal)",
+            "Pak Punjab (Sheikhupura)"
+          ],
+          "coordinates_sample": [
+            [
+              30.8,
+              74.5
+            ],
+            [
+              31.2,
+              75.6
+            ],
+            [
+              29.9,
+              76.8
+            ],
+            [
+              31.5,
+              74.3
+            ]
+          ]
+        },
+        {
+          "id": "china_basin",
+          "name": "China Yangtze & Southern Basin",
+          "countries": [
+            "China"
+          ],
+          "centroid": [
+            28.5,
+            112.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 23.0,
+          "predicted_hotspots": 787,
+          "predicted_frp_mw": 5084.8,
+          "primary_driver": "Late-autumn harvest crop residue burning & bio-refuse",
+          "key_zones": [
+            "Hunan agricultural plain",
+            "Hubei valleys",
+            "Jiangxi rural belt"
+          ],
+          "coordinates_sample": [
+            [
+              28.2,
+              113.0
+            ],
+            [
+              29.5,
+              112.1
+            ],
+            [
+              27.8,
+              114.5
+            ]
+          ]
+        },
+        {
+          "id": "central_forests",
+          "name": "Central Indian Deciduous Forest Belt",
+          "countries": [
+            "India"
+          ],
+          "centroid": [
+            22.8,
+            81.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 13.0,
+          "predicted_hotspots": 445,
+          "predicted_frp_mw": 2874.0,
+          "primary_driver": "Dry deciduous understory & mahua flower collection clearing (low in Nov)",
+          "key_zones": [
+            "Madhya Pradesh (Bandhavgarh periphery)",
+            "Chhattisgarh highlands",
+            "Odisha Western forests"
+          ],
+          "coordinates_sample": [
+            [
+              22.8,
+              81.5
+            ],
+            [
+              21.9,
+              83.4
+            ],
+            [
+              23.2,
+              82.3
+            ]
+          ]
+        },
+        {
+          "id": "indus_basin",
+          "name": "Lower Indus River Basin",
+          "countries": [
+            "Pakistan"
+          ],
+          "centroid": [
+            27.5,
+            68.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 11.0,
+          "predicted_hotspots": 376,
+          "predicted_frp_mw": 2431.9,
+          "primary_driver": "Post-harvest rice & cotton residue disposal in canal colonies",
+          "key_zones": [
+            "Sindh (Larkana, Sukkur)",
+            "Southern Punjab (Rahim Yar Khan)"
+          ],
+          "coordinates_sample": [
+            [
+              27.5,
+              68.5
+            ],
+            [
+              28.4,
+              69.7
+            ],
+            [
+              26.1,
+              68.9
+            ]
+          ]
+        },
+        {
+          "id": "malaysia_peatlands",
+          "name": "Peninsular Malaysia & Sundaland Peat",
+          "countries": [
+            "Malaysia"
+          ],
+          "centroid": [
+            3.5,
+            102.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 5.0,
+          "predicted_hotspots": 171,
+          "predicted_frp_mw": 1105.4,
+          "primary_driver": "Peatland smoldering & agricultural clearing (heavily suppressed by rain in Nov)",
+          "key_zones": [
+            "Pahang coastal lowlands",
+            "Johor peat tracts",
+            "Selangor agricultural belts"
+          ],
+          "coordinates_sample": [
+            [
+              3.5,
+              102.5
+            ],
+            [
+              2.1,
+              103.2
+            ],
+            [
+              4.2,
+              101.4
+            ]
+          ]
+        },
+        {
+          "id": "iran_steppe",
+          "name": "Eastern Iranian Plateau & Baluchistan",
+          "countries": [
+            "Iran",
+            "Afghanistan"
+          ],
+          "centroid": [
+            29.5,
+            57.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 4.0,
+          "predicted_hotspots": 137,
+          "predicted_frp_mw": 884.3,
+          "primary_driver": "Sparse arid rangeland & winter pastoral scrub burning",
+          "key_zones": [
+            "Sistan-Baluchestan basins",
+            "Kerman eastern foothills"
+          ],
+          "coordinates_sample": [
+            [
+              29.5,
+              57.5
+            ],
+            [
+              30.1,
+              55.4
+            ],
+            [
+              28.5,
+              56.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-08",
+      "day_offset": 2,
+      "day_of_week": "Sunday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 4.7,
+      "confidence_interval_high": 10.4,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 12.1,
+      "total_estimated_hotspots": 3517,
+      "dominant_corridor": "Indo-Gangetic Stubble Front Peak (46.5% of pan-Asian burning)",
+      "center_of_mass": [
+        26.1,
+        80.9
+      ],
+      "corridors": [
+        {
+          "id": "indo_gangetic",
+          "name": "Indo-Gangetic Residue Plains",
+          "countries": [
+            "India",
+            "Pakistan"
+          ],
+          "centroid": [
+            30.5,
+            75.8
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 46.5,
+          "predicted_hotspots": 1635,
+          "predicted_frp_mw": 10566.7,
+          "primary_driver": "Post-monsoon rice stubble burning & agricultural field preparation",
+          "key_zones": [
+            "Punjab (Bathinda, Sangrur, Ludhiana)",
+            "Haryana (Kaithal, Karnal)",
+            "Pak Punjab (Sheikhupura)"
+          ],
+          "coordinates_sample": [
+            [
+              30.8,
+              74.5
+            ],
+            [
+              31.2,
+              75.6
+            ],
+            [
+              29.9,
+              76.8
+            ],
+            [
+              31.5,
+              74.3
+            ]
+          ]
+        },
+        {
+          "id": "china_basin",
+          "name": "China Yangtze & Southern Basin",
+          "countries": [
+            "China"
+          ],
+          "centroid": [
+            28.5,
+            112.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 21.0,
+          "predicted_hotspots": 739,
+          "predicted_frp_mw": 4772.1,
+          "primary_driver": "Late-autumn harvest crop residue burning & bio-refuse",
+          "key_zones": [
+            "Hunan agricultural plain",
+            "Hubei valleys",
+            "Jiangxi rural belt"
+          ],
+          "coordinates_sample": [
+            [
+              28.2,
+              113.0
+            ],
+            [
+              29.5,
+              112.1
+            ],
+            [
+              27.8,
+              114.5
+            ]
+          ]
+        },
+        {
+          "id": "central_forests",
+          "name": "Central Indian Deciduous Forest Belt",
+          "countries": [
+            "India"
+          ],
+          "centroid": [
+            22.8,
+            81.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 12.0,
+          "predicted_hotspots": 422,
+          "predicted_frp_mw": 2726.9,
+          "primary_driver": "Dry deciduous understory & mahua flower collection clearing (low in Nov)",
+          "key_zones": [
+            "Madhya Pradesh (Bandhavgarh periphery)",
+            "Chhattisgarh highlands",
+            "Odisha Western forests"
+          ],
+          "coordinates_sample": [
+            [
+              22.8,
+              81.5
+            ],
+            [
+              21.9,
+              83.4
+            ],
+            [
+              23.2,
+              82.3
+            ]
+          ]
+        },
+        {
+          "id": "indus_basin",
+          "name": "Lower Indus River Basin",
+          "countries": [
+            "Pakistan"
+          ],
+          "centroid": [
+            27.5,
+            68.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 12.0,
+          "predicted_hotspots": 422,
+          "predicted_frp_mw": 2726.9,
+          "primary_driver": "Post-harvest rice & cotton residue disposal in canal colonies",
+          "key_zones": [
+            "Sindh (Larkana, Sukkur)",
+            "Southern Punjab (Rahim Yar Khan)"
+          ],
+          "coordinates_sample": [
+            [
+              27.5,
+              68.5
+            ],
+            [
+              28.4,
+              69.7
+            ],
+            [
+              26.1,
+              68.9
+            ]
+          ]
+        },
+        {
+          "id": "malaysia_peatlands",
+          "name": "Peninsular Malaysia & Sundaland Peat",
+          "countries": [
+            "Malaysia"
+          ],
+          "centroid": [
+            3.5,
+            102.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 4.5,
+          "predicted_hotspots": 158,
+          "predicted_frp_mw": 1022.6,
+          "primary_driver": "Peatland smoldering & agricultural clearing (heavily suppressed by rain in Nov)",
+          "key_zones": [
+            "Pahang coastal lowlands",
+            "Johor peat tracts",
+            "Selangor agricultural belts"
+          ],
+          "coordinates_sample": [
+            [
+              3.5,
+              102.5
+            ],
+            [
+              2.1,
+              103.2
+            ],
+            [
+              4.2,
+              101.4
+            ]
+          ]
+        },
+        {
+          "id": "iran_steppe",
+          "name": "Eastern Iranian Plateau & Baluchistan",
+          "countries": [
+            "Iran",
+            "Afghanistan"
+          ],
+          "centroid": [
+            29.5,
+            57.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 4.0,
+          "predicted_hotspots": 141,
+          "predicted_frp_mw": 909.0,
+          "primary_driver": "Sparse arid rangeland & winter pastoral scrub burning",
+          "key_zones": [
+            "Sistan-Baluchestan basins",
+            "Kerman eastern foothills"
+          ],
+          "coordinates_sample": [
+            [
+              29.5,
+              57.5
+            ],
+            [
+              30.1,
+              55.4
+            ],
+            [
+              28.5,
+              56.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-09",
+      "day_offset": 3,
+      "day_of_week": "Monday",
+      "predicted_hai": 7.3,
+      "confidence_interval_low": 4.1,
+      "confidence_interval_high": 10.5,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 11.9,
+      "total_estimated_hotspots": 3396,
+      "dominant_corridor": "Indo-Gangetic Residue Plains (39.0% of pan-Asian burning)",
+      "center_of_mass": [
+        25.1,
+        84.8
+      ],
+      "corridors": [
+        {
+          "id": "indo_gangetic",
+          "name": "Indo-Gangetic Residue Plains",
+          "countries": [
+            "India",
+            "Pakistan"
+          ],
+          "centroid": [
+            30.5,
+            75.8
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 39.0,
+          "predicted_hotspots": 1324,
+          "predicted_frp_mw": 8557.5,
+          "primary_driver": "Post-monsoon rice stubble burning & agricultural field preparation",
+          "key_zones": [
+            "Punjab (Bathinda, Sangrur, Ludhiana)",
+            "Haryana (Kaithal, Karnal)",
+            "Pak Punjab (Sheikhupura)"
+          ],
+          "coordinates_sample": [
+            [
+              30.8,
+              74.5
+            ],
+            [
+              31.2,
+              75.6
+            ],
+            [
+              29.9,
+              76.8
+            ],
+            [
+              31.5,
+              74.3
+            ]
+          ]
+        },
+        {
+          "id": "china_basin",
+          "name": "China Yangtze & Southern Basin",
+          "countries": [
+            "China"
+          ],
+          "centroid": [
+            28.5,
+            112.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 25.5,
+          "predicted_hotspots": 866,
+          "predicted_frp_mw": 5595.3,
+          "primary_driver": "Late-autumn harvest crop residue burning & bio-refuse",
+          "key_zones": [
+            "Hunan agricultural plain",
+            "Hubei valleys",
+            "Jiangxi rural belt"
+          ],
+          "coordinates_sample": [
+            [
+              28.2,
+              113.0
+            ],
+            [
+              29.5,
+              112.1
+            ],
+            [
+              27.8,
+              114.5
+            ]
+          ]
+        },
+        {
+          "id": "central_forests",
+          "name": "Central Indian Deciduous Forest Belt",
+          "countries": [
+            "India"
+          ],
+          "centroid": [
+            22.8,
+            81.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 15.5,
+          "predicted_hotspots": 526,
+          "predicted_frp_mw": 3401.1,
+          "primary_driver": "Dry deciduous understory & mahua flower collection clearing (low in Nov)",
+          "key_zones": [
+            "Madhya Pradesh (Bandhavgarh periphery)",
+            "Chhattisgarh highlands",
+            "Odisha Western forests"
+          ],
+          "coordinates_sample": [
+            [
+              22.8,
+              81.5
+            ],
+            [
+              21.9,
+              83.4
+            ],
+            [
+              23.2,
+              82.3
+            ]
+          ]
+        },
+        {
+          "id": "indus_basin",
+          "name": "Lower Indus River Basin",
+          "countries": [
+            "Pakistan"
+          ],
+          "centroid": [
+            27.5,
+            68.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 11.0,
+          "predicted_hotspots": 374,
+          "predicted_frp_mw": 2413.7,
+          "primary_driver": "Post-harvest rice & cotton residue disposal in canal colonies",
+          "key_zones": [
+            "Sindh (Larkana, Sukkur)",
+            "Southern Punjab (Rahim Yar Khan)"
+          ],
+          "coordinates_sample": [
+            [
+              27.5,
+              68.5
+            ],
+            [
+              28.4,
+              69.7
+            ],
+            [
+              26.1,
+              68.9
+            ]
+          ]
+        },
+        {
+          "id": "malaysia_peatlands",
+          "name": "Peninsular Malaysia & Sundaland Peat",
+          "countries": [
+            "Malaysia"
+          ],
+          "centroid": [
+            3.5,
+            102.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 5.0,
+          "predicted_hotspots": 170,
+          "predicted_frp_mw": 1097.1,
+          "primary_driver": "Peatland smoldering & agricultural clearing (heavily suppressed by rain in Nov)",
+          "key_zones": [
+            "Pahang coastal lowlands",
+            "Johor peat tracts",
+            "Selangor agricultural belts"
+          ],
+          "coordinates_sample": [
+            [
+              3.5,
+              102.5
+            ],
+            [
+              2.1,
+              103.2
+            ],
+            [
+              4.2,
+              101.4
+            ]
+          ]
+        },
+        {
+          "id": "iran_steppe",
+          "name": "Eastern Iranian Plateau & Baluchistan",
+          "countries": [
+            "Iran",
+            "Afghanistan"
+          ],
+          "centroid": [
+            29.5,
+            57.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 4.0,
+          "predicted_hotspots": 136,
+          "predicted_frp_mw": 877.7,
+          "primary_driver": "Sparse arid rangeland & winter pastoral scrub burning",
+          "key_zones": [
+            "Sistan-Baluchestan basins",
+            "Kerman eastern foothills"
+          ],
+          "coordinates_sample": [
+            [
+              29.5,
+              57.5
+            ],
+            [
+              30.1,
+              55.4
+            ],
+            [
+              28.5,
+              56.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-10",
+      "day_offset": 4,
+      "day_of_week": "Tuesday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 4.0,
+      "confidence_interval_high": 11.2,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 11.7,
+      "total_estimated_hotspots": 3534,
+      "dominant_corridor": "Yangtze Agricultural Acceleration & Indo-Gangetic Front (64.5% combined)",
+      "center_of_mass": [
+        25.8,
+        87.2
+      ],
+      "corridors": [
+        {
+          "id": "indo_gangetic",
+          "name": "Indo-Gangetic Residue Plains",
+          "countries": [
+            "India",
+            "Pakistan"
+          ],
+          "centroid": [
+            30.5,
+            75.8
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 36.0,
+          "predicted_hotspots": 1273,
+          "predicted_frp_mw": 8223.8,
+          "primary_driver": "Post-monsoon rice stubble burning & agricultural field preparation",
+          "key_zones": [
+            "Punjab (Bathinda, Sangrur, Ludhiana)",
+            "Haryana (Kaithal, Karnal)",
+            "Pak Punjab (Sheikhupura)"
+          ],
+          "coordinates_sample": [
+            [
+              30.8,
+              74.5
+            ],
+            [
+              31.2,
+              75.6
+            ],
+            [
+              29.9,
+              76.8
+            ],
+            [
+              31.5,
+              74.3
+            ]
+          ]
+        },
+        {
+          "id": "china_basin",
+          "name": "China Yangtze & Southern Basin",
+          "countries": [
+            "China"
+          ],
+          "centroid": [
+            28.5,
+            112.5
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 28.5,
+          "predicted_hotspots": 1007,
+          "predicted_frp_mw": 6510.5,
+          "primary_driver": "Late-autumn harvest crop residue burning & bio-refuse",
+          "key_zones": [
+            "Hunan agricultural plain",
+            "Hubei valleys",
+            "Jiangxi rural belt"
+          ],
+          "coordinates_sample": [
+            [
+              28.2,
+              113.0
+            ],
+            [
+              29.5,
+              112.1
+            ],
+            [
+              27.8,
+              114.5
+            ]
+          ]
+        },
+        {
+          "id": "central_forests",
+          "name": "Central Indian Deciduous Forest Belt",
+          "countries": [
+            "India"
+          ],
+          "centroid": [
+            22.8,
+            81.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 15.0,
+          "predicted_hotspots": 530,
+          "predicted_frp_mw": 3426.6,
+          "primary_driver": "Dry deciduous understory & mahua flower collection clearing (low in Nov)",
+          "key_zones": [
+            "Madhya Pradesh (Bandhavgarh periphery)",
+            "Chhattisgarh highlands",
+            "Odisha Western forests"
+          ],
+          "coordinates_sample": [
+            [
+              22.8,
+              81.5
+            ],
+            [
+              21.9,
+              83.4
+            ],
+            [
+              23.2,
+              82.3
+            ]
+          ]
+        },
+        {
+          "id": "indus_basin",
+          "name": "Lower Indus River Basin",
+          "countries": [
+            "Pakistan"
+          ],
+          "centroid": [
+            27.5,
+            68.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 11.0,
+          "predicted_hotspots": 389,
+          "predicted_frp_mw": 2512.8,
+          "primary_driver": "Post-harvest rice & cotton residue disposal in canal colonies",
+          "key_zones": [
+            "Sindh (Larkana, Sukkur)",
+            "Southern Punjab (Rahim Yar Khan)"
+          ],
+          "coordinates_sample": [
+            [
+              27.5,
+              68.5
+            ],
+            [
+              28.4,
+              69.7
+            ],
+            [
+              26.1,
+              68.9
+            ]
+          ]
+        },
+        {
+          "id": "malaysia_peatlands",
+          "name": "Peninsular Malaysia & Sundaland Peat",
+          "countries": [
+            "Malaysia"
+          ],
+          "centroid": [
+            3.5,
+            102.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 5.5,
+          "predicted_hotspots": 194,
+          "predicted_frp_mw": 1256.4,
+          "primary_driver": "Peatland smoldering & agricultural clearing (heavily suppressed by rain in Nov)",
+          "key_zones": [
+            "Pahang coastal lowlands",
+            "Johor peat tracts",
+            "Selangor agricultural belts"
+          ],
+          "coordinates_sample": [
+            [
+              3.5,
+              102.5
+            ],
+            [
+              2.1,
+              103.2
+            ],
+            [
+              4.2,
+              101.4
+            ]
+          ]
+        },
+        {
+          "id": "iran_steppe",
+          "name": "Eastern Iranian Plateau & Baluchistan",
+          "countries": [
+            "Iran",
+            "Afghanistan"
+          ],
+          "centroid": [
+            29.5,
+            57.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 4.0,
+          "predicted_hotspots": 141,
+          "predicted_frp_mw": 913.8,
+          "primary_driver": "Sparse arid rangeland & winter pastoral scrub burning",
+          "key_zones": [
+            "Sistan-Baluchestan basins",
+            "Kerman eastern foothills"
+          ],
+          "coordinates_sample": [
+            [
+              29.5,
+              57.5
+            ],
+            [
+              30.1,
+              55.4
+            ],
+            [
+              28.5,
+              56.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-11",
+      "day_offset": 5,
+      "day_of_week": "Wednesday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 3.6,
+      "confidence_interval_high": 11.5,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 11.4,
+      "total_estimated_hotspots": 3512,
+      "dominant_corridor": "China Yangtze Basin & Indo-Gangetic Co-Dominance (67.0% combined)",
+      "center_of_mass": [
+        26.4,
+        89.5
+      ],
+      "corridors": [
+        {
+          "id": "indo_gangetic",
+          "name": "Indo-Gangetic Residue Plains",
+          "countries": [
+            "India",
+            "Pakistan"
+          ],
+          "centroid": [
+            30.5,
+            75.8
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 34.0,
+          "predicted_hotspots": 1194,
+          "predicted_frp_mw": 7716.2,
+          "primary_driver": "Post-monsoon rice stubble burning & agricultural field preparation",
+          "key_zones": [
+            "Punjab (Bathinda, Sangrur, Ludhiana)",
+            "Haryana (Kaithal, Karnal)",
+            "Pak Punjab (Sheikhupura)"
+          ],
+          "coordinates_sample": [
+            [
+              30.8,
+              74.5
+            ],
+            [
+              31.2,
+              75.6
+            ],
+            [
+              29.9,
+              76.8
+            ],
+            [
+              31.5,
+              74.3
+            ]
+          ]
+        },
+        {
+          "id": "china_basin",
+          "name": "China Yangtze & Southern Basin",
+          "countries": [
+            "China"
+          ],
+          "centroid": [
+            28.5,
+            112.5
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 33.0,
+          "predicted_hotspots": 1159,
+          "predicted_frp_mw": 7489.3,
+          "primary_driver": "Late-autumn harvest crop residue burning & bio-refuse",
+          "key_zones": [
+            "Hunan agricultural plain",
+            "Hubei valleys",
+            "Jiangxi rural belt"
+          ],
+          "coordinates_sample": [
+            [
+              28.2,
+              113.0
+            ],
+            [
+              29.5,
+              112.1
+            ],
+            [
+              27.8,
+              114.5
+            ]
+          ]
+        },
+        {
+          "id": "central_forests",
+          "name": "Central Indian Deciduous Forest Belt",
+          "countries": [
+            "India"
+          ],
+          "centroid": [
+            22.8,
+            81.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 14.5,
+          "predicted_hotspots": 509,
+          "predicted_frp_mw": 3290.7,
+          "primary_driver": "Dry deciduous understory & mahua flower collection clearing (low in Nov)",
+          "key_zones": [
+            "Madhya Pradesh (Bandhavgarh periphery)",
+            "Chhattisgarh highlands",
+            "Odisha Western forests"
+          ],
+          "coordinates_sample": [
+            [
+              22.8,
+              81.5
+            ],
+            [
+              21.9,
+              83.4
+            ],
+            [
+              23.2,
+              82.3
+            ]
+          ]
+        },
+        {
+          "id": "indus_basin",
+          "name": "Lower Indus River Basin",
+          "countries": [
+            "Pakistan"
+          ],
+          "centroid": [
+            27.5,
+            68.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 10.5,
+          "predicted_hotspots": 369,
+          "predicted_frp_mw": 2382.9,
+          "primary_driver": "Post-harvest rice & cotton residue disposal in canal colonies",
+          "key_zones": [
+            "Sindh (Larkana, Sukkur)",
+            "Southern Punjab (Rahim Yar Khan)"
+          ],
+          "coordinates_sample": [
+            [
+              27.5,
+              68.5
+            ],
+            [
+              28.4,
+              69.7
+            ],
+            [
+              26.1,
+              68.9
+            ]
+          ]
+        },
+        {
+          "id": "malaysia_peatlands",
+          "name": "Peninsular Malaysia & Sundaland Peat",
+          "countries": [
+            "Malaysia"
+          ],
+          "centroid": [
+            3.5,
+            102.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 4.5,
+          "predicted_hotspots": 158,
+          "predicted_frp_mw": 1021.3,
+          "primary_driver": "Peatland smoldering & agricultural clearing (heavily suppressed by rain in Nov)",
+          "key_zones": [
+            "Pahang coastal lowlands",
+            "Johor peat tracts",
+            "Selangor agricultural belts"
+          ],
+          "coordinates_sample": [
+            [
+              3.5,
+              102.5
+            ],
+            [
+              2.1,
+              103.2
+            ],
+            [
+              4.2,
+              101.4
+            ]
+          ]
+        },
+        {
+          "id": "iran_steppe",
+          "name": "Eastern Iranian Plateau & Baluchistan",
+          "countries": [
+            "Iran",
+            "Afghanistan"
+          ],
+          "centroid": [
+            29.5,
+            57.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 3.5,
+          "predicted_hotspots": 123,
+          "predicted_frp_mw": 794.3,
+          "primary_driver": "Sparse arid rangeland & winter pastoral scrub burning",
+          "key_zones": [
+            "Sistan-Baluchestan basins",
+            "Kerman eastern foothills"
+          ],
+          "coordinates_sample": [
+            [
+              29.5,
+              57.5
+            ],
+            [
+              30.1,
+              55.4
+            ],
+            [
+              28.5,
+              56.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-12",
+      "day_offset": 6,
+      "day_of_week": "Thursday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 3.3,
+      "confidence_interval_high": 11.9,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 11.1,
+      "total_estimated_hotspots": 3527,
+      "dominant_corridor": "Indo-Gangetic & Indus Transboundary Inversion Belt (51.0% combined)",
+      "center_of_mass": [
+        25.9,
+        85.3
+      ],
+      "corridors": [
+        {
+          "id": "indo_gangetic",
+          "name": "Indo-Gangetic Residue Plains",
+          "countries": [
+            "India",
+            "Pakistan"
+          ],
+          "centroid": [
+            30.5,
+            75.8
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 37.0,
+          "predicted_hotspots": 1305,
+          "predicted_frp_mw": 8431.9,
+          "primary_driver": "Post-monsoon rice stubble burning & agricultural field preparation",
+          "key_zones": [
+            "Punjab (Bathinda, Sangrur, Ludhiana)",
+            "Haryana (Kaithal, Karnal)",
+            "Pak Punjab (Sheikhupura)"
+          ],
+          "coordinates_sample": [
+            [
+              30.8,
+              74.5
+            ],
+            [
+              31.2,
+              75.6
+            ],
+            [
+              29.9,
+              76.8
+            ],
+            [
+              31.5,
+              74.3
+            ]
+          ]
+        },
+        {
+          "id": "china_basin",
+          "name": "China Yangtze & Southern Basin",
+          "countries": [
+            "China"
+          ],
+          "centroid": [
+            28.5,
+            112.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 28.0,
+          "predicted_hotspots": 988,
+          "predicted_frp_mw": 6380.9,
+          "primary_driver": "Late-autumn harvest crop residue burning & bio-refuse",
+          "key_zones": [
+            "Hunan agricultural plain",
+            "Hubei valleys",
+            "Jiangxi rural belt"
+          ],
+          "coordinates_sample": [
+            [
+              28.2,
+              113.0
+            ],
+            [
+              29.5,
+              112.1
+            ],
+            [
+              27.8,
+              114.5
+            ]
+          ]
+        },
+        {
+          "id": "indus_basin",
+          "name": "Lower Indus River Basin",
+          "countries": [
+            "Pakistan"
+          ],
+          "centroid": [
+            27.5,
+            68.5
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 14.0,
+          "predicted_hotspots": 494,
+          "predicted_frp_mw": 3190.4,
+          "primary_driver": "Post-harvest rice & cotton residue disposal in canal colonies",
+          "key_zones": [
+            "Sindh (Larkana, Sukkur)",
+            "Southern Punjab (Rahim Yar Khan)"
+          ],
+          "coordinates_sample": [
+            [
+              27.5,
+              68.5
+            ],
+            [
+              28.4,
+              69.7
+            ],
+            [
+              26.1,
+              68.9
+            ]
+          ]
+        },
+        {
+          "id": "central_forests",
+          "name": "Central Indian Deciduous Forest Belt",
+          "countries": [
+            "India"
+          ],
+          "centroid": [
+            22.8,
+            81.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 12.0,
+          "predicted_hotspots": 423,
+          "predicted_frp_mw": 2734.7,
+          "primary_driver": "Dry deciduous understory & mahua flower collection clearing (low in Nov)",
+          "key_zones": [
+            "Madhya Pradesh (Bandhavgarh periphery)",
+            "Chhattisgarh highlands",
+            "Odisha Western forests"
+          ],
+          "coordinates_sample": [
+            [
+              22.8,
+              81.5
+            ],
+            [
+              21.9,
+              83.4
+            ],
+            [
+              23.2,
+              82.3
+            ]
+          ]
+        },
+        {
+          "id": "malaysia_peatlands",
+          "name": "Peninsular Malaysia & Sundaland Peat",
+          "countries": [
+            "Malaysia"
+          ],
+          "centroid": [
+            3.5,
+            102.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 5.0,
+          "predicted_hotspots": 176,
+          "predicted_frp_mw": 1139.4,
+          "primary_driver": "Peatland smoldering & agricultural clearing (heavily suppressed by rain in Nov)",
+          "key_zones": [
+            "Pahang coastal lowlands",
+            "Johor peat tracts",
+            "Selangor agricultural belts"
+          ],
+          "coordinates_sample": [
+            [
+              3.5,
+              102.5
+            ],
+            [
+              2.1,
+              103.2
+            ],
+            [
+              4.2,
+              101.4
+            ]
+          ]
+        },
+        {
+          "id": "iran_steppe",
+          "name": "Eastern Iranian Plateau & Baluchistan",
+          "countries": [
+            "Iran",
+            "Afghanistan"
+          ],
+          "centroid": [
+            29.5,
+            57.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 4.0,
+          "predicted_hotspots": 141,
+          "predicted_frp_mw": 911.6,
+          "primary_driver": "Sparse arid rangeland & winter pastoral scrub burning",
+          "key_zones": [
+            "Sistan-Baluchestan basins",
+            "Kerman eastern foothills"
+          ],
+          "coordinates_sample": [
+            [
+              29.5,
+              57.5
+            ],
+            [
+              30.1,
+              55.4
+            ],
+            [
+              28.5,
+              56.5
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-13",
+      "day_offset": 7,
+      "day_of_week": "Friday",
+      "predicted_hai": 7.6,
+      "confidence_interval_low": 2.9,
+      "confidence_interval_high": 12.3,
+      "high_anomaly_probability": 0.001,
+      "risk_tier": "SUPPRESSED",
+      "color": "#3b82f6",
+      "alert_code": "BLUE",
+      "expected_seasonal_baseline": 10.6,
+      "total_estimated_hotspots": 3526,
+      "dominant_corridor": "Indo-Gangetic Residue Plains (38.0% of pan-Asian burning)",
+      "center_of_mass": [
+        25.6,
+        84.1
+      ],
+      "corridors": [
+        {
+          "id": "indo_gangetic",
+          "name": "Indo-Gangetic Residue Plains",
+          "countries": [
+            "India",
+            "Pakistan"
+          ],
+          "centroid": [
+            30.5,
+            75.8
+          ],
+          "risk_tier": "ELEVATED",
+          "share_percentage": 38.0,
+          "predicted_hotspots": 1340,
+          "predicted_frp_mw": 8655.4,
+          "primary_driver": "Post-monsoon rice stubble burning & agricultural field preparation",
+          "key_zones": [
+            "Punjab (Bathinda, Sangrur, Ludhiana)",
+            "Haryana (Kaithal, Karnal)",
+            "Pak Punjab (Sheikhupura)"
+          ],
+          "coordinates_sample": [
+            [
+              30.8,
+              74.5
+            ],
+            [
+              31.2,
+              75.6
+            ],
+            [
+              29.9,
+              76.8
+            ],
+            [
+              31.5,
+              74.3
+            ]
+          ]
+        },
+        {
+          "id": "china_basin",
+          "name": "China Yangtze & Southern Basin",
+          "countries": [
+            "China"
+          ],
+          "centroid": [
+            28.5,
+            112.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 27.0,
+          "predicted_hotspots": 952,
+          "predicted_frp_mw": 6149.9,
+          "primary_driver": "Late-autumn harvest crop residue burning & bio-refuse",
+          "key_zones": [
+            "Hunan agricultural plain",
+            "Hubei valleys",
+            "Jiangxi rural belt"
+          ],
+          "coordinates_sample": [
+            [
+              28.2,
+              113.0
+            ],
+            [
+              29.5,
+              112.1
+            ],
+            [
+              27.8,
+              114.5
+            ]
+          ]
+        },
+        {
+          "id": "central_forests",
+          "name": "Central Indian Deciduous Forest Belt",
+          "countries": [
+            "India"
+          ],
+          "centroid": [
+            22.8,
+            81.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 14.0,
+          "predicted_hotspots": 494,
+          "predicted_frp_mw": 3188.8,
+          "primary_driver": "Dry deciduous understory & mahua flower collection clearing (low in Nov)",
+          "key_zones": [
+            "Madhya Pradesh (Bandhavgarh periphery)",
+            "Chhattisgarh highlands",
+            "Odisha Western forests"
+          ],
+          "coordinates_sample": [
+            [
+              22.8,
+              81.5
+            ],
+            [
+              21.9,
+              83.4
+            ],
+            [
+              23.2,
+              82.3
+            ]
+          ]
+        },
+        {
+          "id": "indus_basin",
+          "name": "Lower Indus River Basin",
+          "countries": [
+            "Pakistan"
+          ],
+          "centroid": [
+            27.5,
+            68.5
+          ],
+          "risk_tier": "NOMINAL",
+          "share_percentage": 12.0,
+          "predicted_hotspots": 423,
+          "predicted_frp_mw": 2733.3,
+          "primary_driver": "Post-harvest rice & cotton residue disposal in canal colonies",
+          "key_zones": [
+            "Sindh (Larkana, Sukkur)",
+            "Southern Punjab (Rahim Yar Khan)"
+          ],
+          "coordinates_sample": [
+            [
+              27.5,
+              68.5
+            ],
+            [
+              28.4,
+              69.7
+            ],
+            [
+              26.1,
+              68.9
+            ]
+          ]
+        },
+        {
+          "id": "malaysia_peatlands",
+          "name": "Peninsular Malaysia & Sundaland Peat",
+          "countries": [
+            "Malaysia"
+          ],
+          "centroid": [
+            3.5,
+            102.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 5.0,
+          "predicted_hotspots": 176,
+          "predicted_frp_mw": 1138.9,
+          "primary_driver": "Peatland smoldering & agricultural clearing (heavily suppressed by rain in Nov)",
+          "key_zones": [
+            "Pahang coastal lowlands",
+            "Johor peat tracts",
+            "Selangor agricultural belts"
+          ],
+          "coordinates_sample": [
+            [
+              3.5,
+              102.5
+            ],
+            [
+              2.1,
+              103.2
+            ],
+            [
+              4.2,
+              101.4
+            ]
+          ]
+        },
+        {
+          "id": "iran_steppe",
+          "name": "Eastern Iranian Plateau & Baluchistan",
+          "countries": [
+            "Iran",
+            "Afghanistan"
+          ],
+          "centroid": [
+            29.5,
+            57.5
+          ],
+          "risk_tier": "SUPPRESSED",
+          "share_percentage": 4.0,
+          "predicted_hotspots": 141,
+          "predicted_frp_mw": 911.1,
+          "primary_driver": "Sparse arid rangeland & winter pastoral scrub burning",
+          "key_zones": [
+            "Sistan-Baluchestan basins",
+            "Kerman eastern foothills"
+          ],
+          "coordinates_sample": [
+            [
+              29.5,
+              57.5
+            ],
+            [
+              30.1,
+              55.4
+            ],
+            [
+              28.5,
+              56.5
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "disclaimer": "FIRECHRONOS predictive forecasts are synthesized from harmonized satellite fire histories and seasonal climatology across Asia. This system provides statistical situational awareness and early warning for wildfire, peatland, and crop residue burning dynamics."
+}
