@@ -11,10 +11,10 @@
   DayRecord,
 } from './types';
 
-import staticForecast from '../../data/processed/forecast_7day.json';
-import staticGrid from '../../data/processed/india_grid_top_hotspots.json';
-import staticMetadata from '../../data/processed/metadata.json';
-import staticBaseline from '../../data/processed/india_monthly_baseline.json';
+import staticForecast from './data/forecast_7day.json';
+import staticGrid from './data/india_grid_top_hotspots.json';
+import staticMetadata from './data/metadata.json';
+import staticBaseline from './data/india_monthly_baseline.json';
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
@@ -34,7 +34,7 @@ let cachedCalendar: any[] | null = null;
 async function getFallbackCalendar(): Promise<any[]> {
   if (cachedCalendar && cachedCalendar.length > 0) return cachedCalendar;
   try {
-    const mod = await import('../../data/processed/india_daily_calendar.json');
+    const mod = await import('./data/india_daily_calendar.json');
     cachedCalendar = (mod.default || mod) as any[];
     return cachedCalendar || [];
   } catch (err) {

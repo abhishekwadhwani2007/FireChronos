@@ -4,6 +4,7 @@
 > *NASA Space Apps Challenge 2026 — Pan-Asian Multi-Sensor Wildfire Harmonization & Predictive Intelligence*
 
 [![NASA Space Apps 2026](https://img.shields.io/badge/NASA%20Space%20Apps-2026-orange.svg)](https://www.spaceappschallenge.org/)
+[![Live App](https://img.shields.io/badge/Live%20Demo-firechronos.embarko.app-success.svg?style=flat-square)](https://firechronos.embarko.app)
 [![Authentic NASA FIRMS](https://img.shields.io/badge/NASA%20FIRMS-20.9M%20Records-blue.svg)](https://firms.modaps.eosdis.nasa.gov/)
 [![Model R2](https://img.shields.io/badge/R%C2%B2%20Fit-95.3%25-cyan.svg)]()
 [![ROC-AUC](https://img.shields.io/badge/ROC--AUC-0.868-emerald.svg)]()
@@ -11,6 +12,12 @@
 [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38B2AC.svg)](https://tailwindcss.com/)
+
+---
+
+## 🌐 Live Application
+- **Production URL**: [https://firechronos.embarko.app](https://firechronos.embarko.app)
+- **Features**: Real-time Leaflet GIS mapping with country regional drilldowns (India, Pakistan, Bangladesh, Pan-Asia), 2,503 calendar days of historical wildfire observations, dual-head AI forecasts, and cross-sensor harmonization lab.
 
 ---
 
